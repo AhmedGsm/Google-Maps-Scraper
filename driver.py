@@ -4,11 +4,13 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 #from selenium.webdriver.opera.options import Options as OperaOptions
 
+import time
+import socket
+from selenium.common.exceptions import WebDriverException
 
 class Driver:
-    def __init__(self, browser='chrome', port="9100"):
+    def __init__(self, browser='chrome'):
         self.browser = browser.lower()  # Normalize the browser name to lowercase
-        self.port = port
         self.driver = self._create_driver()
 
     def _create_driver(self):
@@ -47,6 +49,37 @@ class Driver:
     def get(self, url):
         """Navigates the browser to the specified URL."""
         self.driver.get(url)
+
+    def land_page_url(self, url):
+       #self.get(url)
+       self.safe_get(url)
+       try:
+           self.maximize_window()
+       except:
+           print("The Browser is already maximized or the feature is not supported!")
+
+    # Function to check internet connection
+    def is_connected(self):
+        try:
+            # Try to connect to a known public server (Google's public DNS)
+            socket.create_connection(("8.8.8.8", 53), timeout=5)
+            return True
+        except OSError:
+            return False
+
+    def safe_get(self, url):
+        while True:
+            if self.is_connected():
+                try:
+                    self.get(url)
+                    print("Page loaded successfully.")
+                    break  # Exit the loop if the page is loaded
+                except WebDriverException as e:
+                    print(f"Encountered an error: {e}")
+                    # Optional: Add logging if needed
+            else:
+                print("No internet connection. Retrying in 30 seconds...")
+                time.sleep(30)  # Wait for 30 seconds before retrying
 
     def quit(self):
         """Closes the browser."""
