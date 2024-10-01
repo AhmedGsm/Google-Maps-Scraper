@@ -1,8 +1,10 @@
 
-from driver import Driver
+from drivermanipulator import DriverManipulator
 from constants import *
+from wsite import Site
+driver_manipulator = DriverManipulator()
+googlemapssite = Site(driver_manipulator)
+googlemapssite.scrape_site()
+#input("Enter any key to exit!")
+driver_manipulator.driver.quit()
 
-browser_driver = Driver(browser='firefox')
-browser_driver.land_page_url(URL)
-input("Press any key to exit!")
-browser_driver.quit()

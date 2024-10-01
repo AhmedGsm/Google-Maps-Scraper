@@ -8,53 +8,54 @@ import time
 import socket
 from selenium.common.exceptions import WebDriverException
 
-class Driver:
+class DriverManipulator():
     def __init__(self, browser='chrome'):
         self.browser = browser.lower()  # Normalize the browser name to lowercase
-        self.driver = self._create_driver()
+        self.driver = None
+        self._create_driver()
 
     def _create_driver(self):
         """Creates a WebDriver instance based on the selected browser."""
         if self.browser == 'chrome':
-            return self._create_chrome_driver()
+            self._create_chrome_driver()
         elif self.browser == 'firefox':
-            return self._create_firefox_driver()
+            self._create_firefox_driver()
         elif self.browser == 'edge':
-            return self._create_edge_driver()
+            self._create_edge_driver()
         elif self.browser == 'opera':
-            return self._create_opera_driver()
+            self._create_opera_driver()
         else:
             raise ValueError(f"Unsupported browser: {self.browser}")
 
     def _create_chrome_driver(self):
         chrome_options = ChromeOptions()
         # Add Chrome-specific options if necessary
-        return webdriver.Chrome(options=chrome_options)
+        self.driver = webdriver.Chrome(options=chrome_options)
 
     def _create_firefox_driver(self):
         firefox_options = FirefoxOptions()
         # Add Firefox-specific options if necessary
-        return webdriver.Firefox(options=firefox_options)
+        self.driver = webdriver.Firefox(options=firefox_options)
 
     def _create_edge_driver(self):
         edge_options = EdgeOptions()
         # Add Edge-specific options if necessary
-        return webdriver.Edge(options=edge_options)
+        self.driver = webdriver.Edge(options=edge_options)
 
     def _create_opera_driver(self):
         opera_options = OperaOptions()
         # Add Opera-specific options if necessary
-        return webdriver.Opera(options=opera_options)
+        self.driver = webdriver.Opera(options=opera_options)
 
-    def get(self, url):
-        """Navigates the browser to the specified URL."""
-        self.driver.get(url)
+    """def get(self, url):
+        
+        self.get(url)"""
 
     def land_page_url(self, url):
        #self.get(url)
        self.safe_get(url)
        try:
-           self.maximize_window()
+           self.driver.maximize_window()
        except:
            print("The Browser is already maximized or the feature is not supported!")
 
@@ -71,7 +72,7 @@ class Driver:
         while True:
             if self.is_connected():
                 try:
-                    self.get(url)
+                    self.driver.get(url)
                     print("Page loaded successfully.")
                     break  # Exit the loop if the page is loaded
                 except WebDriverException as e:
@@ -83,5 +84,5 @@ class Driver:
 
     def quit(self):
         """Closes the browser."""
-        self.driver.quit()
+        self.quit()
 
