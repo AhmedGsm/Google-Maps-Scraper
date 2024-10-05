@@ -4,6 +4,8 @@ import time
 from constants import *
 from drivermanipulator import DriverManipulator
 from selenium.webdriver.common.by import By
+
+from place import Place
 from scrollable import Scrollable
 
 
@@ -25,6 +27,10 @@ class Site(Scrollable):
 
         # Go to page URL
         drivermanipulator.land_page_url(places[self.__place_index])
+        place = Place(drivermanipulator.driver)
+        print("Place address" + place.scrape_address())
+        print("Place website" + place.scrape_website())
+        print("Place phone number" + place.scrape_phone_number())
         self.__place_index += 1
 
         # Wait between scraping places
