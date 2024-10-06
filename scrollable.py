@@ -49,7 +49,8 @@ class Scrollable:
             if delete_element:
                 for i in range(NUMBER_ELEMENT_PER_SCROLL):
                     self.delete_js_dom_element(driver, children_selector)
-                    time.sleep(5)
+                    loop_callback()
+                    time.sleep(LOOP_SCRAPING_INTERVAL_TIME)
 
     def delete_js_dom_element(self, driver, children_selector):
         script = f""" 
