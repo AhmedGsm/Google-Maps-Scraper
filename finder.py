@@ -46,7 +46,7 @@ class Finder:
                 print(f"Request failed with status code {response.status_code}")
         except requests.exceptions.RequestException as e:
             print("An error occurred:", e)
-
+"""
 # Test the class
 API_KEY = "a32f0ffbdca8c63a0fb35db1e52a131cabc3b7c6"
 # Hunter.io endpoint
@@ -78,4 +78,4 @@ for c in contacts:
     print("Phone number: " + str(c["phone_number"]) + "|")
 
 # Check the remaining credits
-finder.check_hunterio_credits()
+finder.check_hunterio_credits()"""

@@ -3,6 +3,7 @@ import time
 
 from constants import *
 from drivermanipulator import DriverManipulator
+from finder import Finder
 from model import Model
 from place import Place
 from scrollable import Scrollable
@@ -39,6 +40,8 @@ class Site(Scrollable):
         print("Place address: " + place_address)
         print("Place website: " + place_website)
         print("Place phone number: " + place_phone)
+
+
         # Save scraped data in Product table
         sql_request = """INSERT INTO googlemaps.places (
         project_name,
@@ -48,11 +51,15 @@ class Site(Scrollable):
         website) VALUES (
         %s, %s, %s, %s, %s)"""
         values = (PROJECT_NAME,
-                  url,
+                  place_website,
                   place_address,
                   place_phone,
                   place_website)
         Model.insert_into_database(sql_request, values)
+
+        # Find email by domain
+        self.find_email_by_domain(place_website, url)
+
         self.__place_index += 1
         # Wait between scraping places
         time.sleep(SCRAPE_PLACES_INTERVAL)
@@ -60,6 +67,39 @@ class Site(Scrollable):
         #self.places_counter += 1
         # Call the function recursively
         self.scrape_tab(places, drivermanipulator)
+
+    def find_email_by_domain(self, place_website):
+        # Find email from emails finders(hunter.io)
+        # Test the class
+        API_KEY = "a32f0ffbdca8c63a0fb35db1e52a131cabc3b7c6"
+        # Hunter.io endpoint
+        url = f"https://api.hunter.io/v2/domain-search"
+        # Domain website
+        domain = place_website
+        # Instantiate finder class
+        finder = Finder(API_KEY, url)
+        # Request the server
+        finder.request_server(domain)
+        # Extract contacts details
+        contacts = finder.find_contacts()
+        # Loop through the contacts list
+        contact_details = ""
+        for c in contacts:
+            contact_details += str(c["value"])
+            contact_details += str(c["type"])
+            contact_details += str(c["confidence"])
+            contact_details += str(c["first_name"])
+            contact_details += str(c["last_name"])
+            contact_details += str(c["position"])
+            contact_details += str(c["seniority"])
+            contact_details += str(c["department"])
+            contact_details += str(c["linkedin"])
+            contact_details = str(c["twitter"]) + "|"
+            contact_details += str(c["phone_number"]) + "\n"
+            print("contact_details: \n" + contact_details)
+        # Check the remaining credits
+        # finder.check_hunterio_credits()
+        return url
 
     def scrape_places_callback(self, *args):
         self.__total_places_index += 1
