@@ -18,16 +18,25 @@ class Scrollable:
         while True:
             try:
                 # Try to retrieve the first liker div if exist(before it will deleted)
-                WebDriverWait(driver, WAIT_ELEMENT_To_APPEAR).until(
+                WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, children_selector))
                 )
                 self.is_element_found = True
             except:
-                if self.is_element_found:
-                    print(end_message)
-                else:
-                    print(NO_ELEMENT_TO_SCRAPE_MESSAGE)
-                break
+                try:
+                    # Try to retrieve the first liker div if exist(before it will deleted)
+                    children_selector = ".Nv2PK.tH5CWc.THOPZb" # Second container selector
+                    WebDriverWait(driver, WAIT_ELEMENT_To_APPEAR).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, children_selector))
+                    )
+                    self.is_element_found = True
+
+                except:
+                    if self.is_element_found:
+                        print(end_message)
+                    else:
+                        print(NO_ELEMENT_TO_SCRAPE_MESSAGE)
+                    break
 
             # Scroll the div using JavaScript
             js_script = f"""

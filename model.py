@@ -1,4 +1,6 @@
 import mysql.connector
+from mysql.connector import connection
+
 from constants import MYSQL_DATABASE, MYSQL_PASSWORD, MYSQL_USER, MYSQL_HOST
 
 
@@ -58,3 +60,23 @@ class Model:
         # Close the connection
         cursor.close()
         db.close()
+
+    @staticmethod
+    def update_database(sql_update, values):
+        model = Model()
+        cursor, db = model.connect_cursor()
+        # Execute the update
+        try:
+            cursor.execute(sql_update, values)
+            db.commit()
+            print("Update successful.")
+
+        except mysql.connector.Error as error:
+            print(f"Failed to update entry: {error}")
+            db.rollback()  # Roll back if there’s an error
+
+        finally:
+            # Close the cursor and connection
+            if db.is_connected():
+                cursor.close()
+                db.close()

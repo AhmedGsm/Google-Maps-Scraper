@@ -1,5 +1,7 @@
-REQUEST = "medical Spa New York City/"
-PROJECT_NAME = "medspa_in_newyork"
+import re
+
+REQUEST = "software companies in new jersey"
+PROJECT_NAME = re.sub(" ", "_", REQUEST)
 BASIC_URL = "https://www.google.com/maps/search/"
 URL = BASIC_URL + REQUEST
 PARALLEL_BROWSER_INSTANCES_COUNT = 1

@@ -1,5 +1,6 @@
 import threading
 import time
+import mysql.connector
 
 from constants import *
 from drivermanipulator import DriverManipulator
@@ -31,8 +32,8 @@ class Site(Scrollable):
 
     def explore_place_details(self, drivermanipulator, places):
         # Go to page URL
-        url = places[self.__place_index]
-        drivermanipulator.land_page_url(url)
+        place_url = places[self.__place_index]
+        drivermanipulator.land_page_url(place_url)
         place = Place(drivermanipulator.driver)
         place_address = place.scrape_address()
         place_website = place.scrape_website()
@@ -41,24 +42,23 @@ class Site(Scrollable):
         print("Place website: " + place_website)
         print("Place phone number: " + place_phone)
 
-
         # Save scraped data in Product table
         sql_request = """INSERT INTO googlemaps.places (
         project_name,
-        url,
+        place_url,
         address,
         phone,
         website) VALUES (
         %s, %s, %s, %s, %s)"""
         values = (PROJECT_NAME,
-                  place_website,
+                  place_url,
                   place_address,
                   place_phone,
                   place_website)
         Model.insert_into_database(sql_request, values)
 
         # Find email by domain
-        self.find_email_by_domain(place_website, url)
+        self.find_email_by_domain(place_url, place_website)
 
         self.__place_index += 1
         # Wait between scraping places
@@ -68,38 +68,107 @@ class Site(Scrollable):
         # Call the function recursively
         self.scrape_tab(places, drivermanipulator)
 
-    def find_email_by_domain(self, place_website):
+    def find_email_by_domain(self, place_url,place_website):
         # Find email from emails finders(hunter.io)
         # Test the class
-        API_KEY = "a32f0ffbdca8c63a0fb35db1e52a131cabc3b7c6"
+        API_KEY_AHMED_GSM = "a32f0ffbdca8c63a0fb35db1e52a131cabc3b7c6"
+        API_KEY_GSM_GENIUS = "a31f0ec3e949d9f9dab2afb2c80344dffa213e19"
         # Hunter.io endpoint
-        url = f"https://api.hunter.io/v2/domain-search"
+        endpoint = f"https://api.hunter.io/v2/domain-search"
         # Domain website
         domain = place_website
         # Instantiate finder class
-        finder = Finder(API_KEY, url)
+        finder = Finder(API_KEY_GSM_GENIUS, endpoint)
         # Request the server
         finder.request_server(domain)
         # Extract contacts details
         contacts = finder.find_contacts()
-        # Loop through the contacts list
-        contact_details = ""
+
+        # Loop through the contacts list and extract email details
+        is_first_email = True
         for c in contacts:
-            contact_details += str(c["value"])
-            contact_details += str(c["type"])
-            contact_details += str(c["confidence"])
-            contact_details += str(c["first_name"])
-            contact_details += str(c["last_name"])
-            contact_details += str(c["position"])
-            contact_details += str(c["seniority"])
-            contact_details += str(c["department"])
-            contact_details += str(c["linkedin"])
-            contact_details = str(c["twitter"]) + "|"
-            contact_details += str(c["phone_number"]) + "\n"
-            print("contact_details: \n" + contact_details)
+            email = str(c["value"])
+            email_type = str(c["type"])
+            email_confidence = str(c["confidence"])
+            first_name = str(c["first_name"])
+            last_name = str(c["last_name"])
+            position = str(c["position"])
+            seniority = str(c["seniority"])
+            department = str(c["department"])
+            linkedin = str(c["linkedin"])
+            twitter = str(c["twitter"])
+            phone_number = str(c["phone_number"])
+            verification_date = str(c["verification"]["date"])
+            status = str(c["verification"]["status"])
+
+            if is_first_email:
+                sql_update = """
+                    UPDATE googlemaps.places
+                    SET 
+                        project_name = %s,
+                        email = %s,
+                        email_type = %s,
+                        email_confidence = %s,
+                        first_name = %s,
+                        last_name = %s,
+                        position = %s,
+                        seniority = %s,
+                        department = %s,
+                        linkedin = %s,
+                        twitter = %s,
+                        phone_number = %s,
+                        verification_date = %s,
+                        email_status = %s
+                    WHERE place_url = %s
+                """
+
+                # Define your values, including the `website` value for the WHERE clause
+                values = (
+                    PROJECT_NAME, email, email_type, email_confidence, first_name,
+                    last_name, position, seniority, department, linkedin, twitter,
+                    phone_number, verification_date, status, place_url
+                )
+
+                # Update the first entry
+                Model.update_database(sql_update, values)
+                is_first_email = False
+            else:
+                # Save email detail in the database
+                # Save scraped data in Product table
+                sql_request = """INSERT INTO googlemaps.places (
+                                    project_name,
+                                    email,
+                                    email_type,
+                                    email_confidence,
+                                    first_name,
+                                    last_name,
+                                    position,
+                                    seniority,
+                                    department,
+                                    linkedin,
+                                    twitter,
+                                    phone_number,
+                                    verification_date,
+                                    email_status) VALUES (
+                                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                values = (PROJECT_NAME,
+                          email,
+                          email_type,
+                          email_confidence,
+                          first_name,
+                          last_name,
+                          position,
+                          seniority,
+                          department,
+                          linkedin,
+                          twitter,
+                          phone_number,
+                          verification_date,
+                          status)
+                Model.insert_into_database(sql_request, values)
         # Check the remaining credits
-        # finder.check_hunterio_credits()
-        return url
+        #finder.check_hunterio_credits()
+
 
     def scrape_places_callback(self, *args):
         self.__total_places_index += 1
