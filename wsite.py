@@ -68,11 +68,18 @@ class Site(Scrollable):
         # Call the function recursively
         self.scrape_tab(places, drivermanipulator)
 
-    def find_email_by_domain(self, place_url,place_website):
+    def find_email_by_domain(self, place_url, place_website):
         # Find email from emails finders(hunter.io)
-        # Test the class
+        # HUNTER.IO API keys!
         API_KEY_AHMED_GSM = "a32f0ffbdca8c63a0fb35db1e52a131cabc3b7c6"
         API_KEY_GSM_GENIUS = "a31f0ec3e949d9f9dab2afb2c80344dffa213e19"
+        API_KEY_HMED_KHABER = "a663c098d8245ce32c013f1f55c99e223bf19c48"
+        API_KEY_AHMED_CEO_SUCCES = "33e245d3f1c8d23eed6f2b4c379053917126a19d"
+        API_KEY_AHMED_CEO_SUCCES_1983 = "f1f01a5d55ca2afedf7c9b39e36b593832efb639"
+
+        # FINDYMAIL API keys!
+        FINDYMAIL_API_KEY_AHMED_GSM = "NaVzLp0SOcfe6GILO5fadGv0WTtAl88woNUcbHwh6bccf8dc"
+
         # Hunter.io endpoint
         endpoint = f"https://api.hunter.io/v2/domain-search"
         # Domain website
