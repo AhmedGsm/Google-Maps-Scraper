@@ -80,6 +80,10 @@ class Site(Scrollable):
         # FINDYMAIL API keys!
         FINDYMAIL_API_KEY_AHMED_GSM = "NaVzLp0SOcfe6GILO5fadGv0WTtAl88woNUcbHwh6bccf8dc"
 
+        # SNOVIO
+        SNOVIO_AHMEDGSM_USER_ID = "8251531ceaa60b16053d83c06690cb20"
+        SNOVIO_AHMEDGSM_API_KEY = "7393e050e87c5aeb5731bbb9861e00ab"
+
         # Hunter.io endpoint
         endpoint = f"https://api.hunter.io/v2/domain-search"
         # Domain website
