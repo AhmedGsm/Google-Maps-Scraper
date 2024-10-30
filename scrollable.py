@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from constants import *
+from model import Model
 
 
 class Scrollable:
@@ -49,7 +50,14 @@ class Scrollable:
             # Get the link of element
             all_link_elements = driver.find_elements(By.CSS_SELECTOR, children_selector)
             link_elements = all_link_elements[0: NUMBER_ELEMENT_PER_SCROLL]
-            places_links = [l.find_element(By.CSS_SELECTOR, "a").get_attribute("href") for l in link_elements]
+            places_links = []
+            for l in link_elements:
+                place_url = l.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
+                entries = Model.read_from_database(f"SELECT website FROM googlemaps.places WHERE place_url = '{place_url}' ")
+                # If the place is saved in the database do not add it to the list
+                # to prevent re-explore it!
+                if not entries:
+                    places_links.append(place_url)
 
             # Run conditional callback function to treat place list
             bulk_callback(places_links)
