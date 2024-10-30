@@ -35,7 +35,7 @@ class Model:
             print(str(e))
 
     @staticmethod
-    def read_all_from_database(sql_request):
+    def read_from_database(sql_request):
         model = Model()
         cursor, db = model.connect_cursor()
         cursor.execute(sql_request)
@@ -46,7 +46,7 @@ class Model:
         return data
 
     @staticmethod
-    def read_from_database(sql_request, callback):
+    def read_from_database_and_callback(sql_request, callback):
         model = Model()
         cursor, db = model.connect_cursor()
         # SQL query
@@ -55,8 +55,8 @@ class Model:
         # Fetch one row at a time
         row = cursor.fetchone()
         while row is not None:
-            row = cursor.fetchone()
             callback(row)
+            row = cursor.fetchone()
         # Close the connection
         cursor.close()
         db.close()
