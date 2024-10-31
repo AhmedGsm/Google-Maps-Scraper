@@ -89,7 +89,7 @@ class Site(Scrollable):
         # Domain website
         domain = place_website
         # Instantiate finder class
-        finder = Finder(API_KEY_GSM_GENIUS, endpoint)
+        finder = Finder(API_KEY_AHMED_GSM, endpoint)
         # Request the server
         finder.request_server(domain)
         # Extract contacts details

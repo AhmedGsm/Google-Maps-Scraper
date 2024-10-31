@@ -31,7 +31,7 @@ class Place:
         )
         details = self.details
         while True:
-            if len(details[0].text) == 0 or len(details[1].text) == 0 or len(details[2].text) == 0:
+            if len(details[0].text) == 0 or len(details[1].text) == 0:
                 time.sleep(1)
                 print("Retrying to get place details...")
                 self.details = driver.find_elements(By.CSS_SELECTOR, PLACE_DETAILS_SELECTOR)
