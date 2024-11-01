@@ -19,36 +19,40 @@ class Scrollable:
         while True:
             try:
                 # Try to retrieve the first liker div if exist(before it will deleted)
-                WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, children_selector))
+                WebDriverWait(driver, TIME_5).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, PLACE_CONTAINER_SELECTOR))
                 )
                 self.is_element_found = True
             except:
-                try:
-                    # Try to retrieve the first liker div if exist(before it will deleted)
-                    children_selector = ".Nv2PK.tH5CWc.THOPZb" # Second container selector
-                    WebDriverWait(driver, WAIT_ELEMENT_To_APPEAR).until(
-                        EC.presence_of_element_located((By.CSS_SELECTOR, children_selector))
-                    )
-                    self.is_element_found = True
-
-                except:
-                    if self.is_element_found:
-                        print(end_message)
-                    else:
-                        print(NO_ELEMENT_TO_SCRAPE_MESSAGE)
-                    break
+                if self.is_element_found:
+                    print(end_message)
+                else:
+                    print(NO_ELEMENT_TO_SCRAPE_MESSAGE)
+                break
+            # Initialize link elements list
+            all_link_elements = []
 
             # Scroll the div using JavaScript
             js_script = f"""
             var parentElement = document.querySelector("{parent_selector}");
-            parentElement.scrollTo(0, window.innerHeight * 2);
+            preScrollTop = parentElement.scrollTop
+            parentElement.scrollTo(0, preScrollTop + 50);
+            if (preScrollTop == parentElement.scrollTop) {{
+                return true;
+            }} else {{
+                return false;
+            }}
             """
-            driver.execute_script(js_script)
 
-            # Manipulate places list and empty it after finishing
-            # Get the link of element
-            all_link_elements = driver.find_elements(By.CSS_SELECTOR, children_selector)
+            while len(all_link_elements) < NUMBER_ELEMENT_PER_SCROLL * 2:
+                end_of_scrolling = driver.execute_script(js_script)
+                if end_of_scrolling:
+                    print("Container arrives to end of scrolling!")
+                    break
+                # Manipulate places list and empty it after finishing
+                # Get the link of element
+                all_link_elements = driver.find_elements(By.CSS_SELECTOR, children_selector)
+                time.sleep(0.5)
             link_elements = all_link_elements[0: NUMBER_ELEMENT_PER_SCROLL]
             places_links = []
             for l in link_elements:
@@ -65,7 +69,11 @@ class Scrollable:
             # Delete place elements from the DOM to prevent overloading the memory
             if delete_element:
                 for i in range(NUMBER_ELEMENT_PER_SCROLL):
-                    self.delete_js_dom_element(driver, children_selector)
+                    print("children_selector: " + children_selector)
+                    try:# For debugging only
+                        self.delete_js_dom_element(driver, children_selector)
+                    except:
+                        print("Cannot delete element!")
                     loop_callback()
                     time.sleep(LOOP_SCRAPING_INTERVAL_TIME)
 

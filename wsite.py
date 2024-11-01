@@ -17,6 +17,8 @@ class Site(Scrollable):
         self.__place_index = 0
         self.__total_places_index = 0
         self.total_places_explored = 0
+        self.find_email = False
+        self.manipulator = DriverManipulator("edge")
         super().__init__()
 
     def scrape_tab(self, places, drivermanipulator):
@@ -24,7 +26,7 @@ class Site(Scrollable):
         # Set the end of recursive running condition
         if self.__place_index == len(self.places):
         #if self.place_index > NUMBER_ELEMENT_PER_SCROLL - 1:
-            drivermanipulator.driver.quit()
+            #drivermanipulator.driver.quit()
             self.__place_index = 0
             return
         # Explore places details
@@ -33,14 +35,15 @@ class Site(Scrollable):
     def explore_place_details(self, drivermanipulator, places):
         # Go to page URL
         place_url = places[self.__place_index]
+        print("place_url: " + place_url)
         drivermanipulator.land_page_url(place_url)
         place = Place(drivermanipulator.driver)
         place_address = place.scrape_address()
         place_website = place.scrape_website()
         place_phone = place.scrape_phone_number()
         print("Place address: " + place_address)
-        print("Place website: " + place_website)
-        print("Place phone number: " + place_phone)
+        print("Place website: " + str(place_website))
+        print("Place phone number: " + str(place_phone))
 
         # Save scraped data in Product table
         sql_request = """INSERT INTO googlemaps.places (
@@ -58,7 +61,8 @@ class Site(Scrollable):
         Model.insert_into_database(sql_request, values)
 
         # Find email by domain
-        self.find_email_by_domain(place_url, place_website)
+        if self.find_email:
+            self.find_email_by_domain(place_url, place_website)
 
         self.__place_index += 1
         # Wait between scraping places
@@ -187,13 +191,16 @@ class Site(Scrollable):
         return
 
     def manipulate_places_callback(self, *args):
+        if not args[0]:
+            return
         self.places = args[0]
         place_index = 0
         # If the index is equal to total place explored
         if self.__total_places_index >= self.total_places_explored:
-            self.scrape_tab(self.places, DriverManipulator("edge"))
+
+            self.scrape_tab(self.places, self.manipulator)
         else:
-            time.sleep(TIME_10)
+            time.sleep(TIME_1)
 
         # Increment current counter
         #self.index += 1

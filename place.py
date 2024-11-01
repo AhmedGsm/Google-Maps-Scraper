@@ -8,34 +8,35 @@ from constants import *
 class Place:
     def __init__(self, driver):
         self.driver = driver
-        self.website = "?"
-        self.phone_number = "?"
+        self.website = None
+        self.phone_number = None
         self.initializations(driver)
 
     def initializations(self, driver):
         # Find elements to pick 6th element that contains places details
         elements = driver.find_elements(By.CSS_SELECTOR, PLACE_DETAILS_CONTAINER_SELECTOR)
-        # Wait until 8 element are found
-        while len(elements) < 6:
-            elements = driver.find_elements(By.CSS_SELECTOR, PLACE_DETAILS_CONTAINER_SELECTOR)
-            print("Elements are < 8, waiting element to be loaded...")
-            time.sleep(1)
+
         # Scroll details container to load data
         js_script = """
-            arguments[0].scrollTo(0, 400);
+            elements = document.querySelectorAll(arguments[0])
+            for (let e of elements) {
+                if (e.scrollHeight > 400) {
+                    e.scrollTo(0, 400);
+                }
+                console.log(e.scrollHeight)
+            }
         """
-        driver.execute_script(js_script, elements[5])
+        driver.execute_script(js_script, PLACE_DETAILS_CONTAINER_SELECTOR)
         # Get places details
-        self.details = WebDriverWait(driver, WAIT_ELEMENT_APPEAR).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, PLACE_DETAILS_SELECTOR))
-        )
-        details = self.details
         while True:
-            if len(details[0].text) == 0 or len(details[1].text) == 0:
-                time.sleep(1)
+            self.details = WebDriverWait(driver, WAIT_ELEMENT_APPEAR).until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, PLACE_DETAILS_SELECTOR))
+            )
+
+            if self.details:
+                time.sleep(2)
                 print("Retrying to get place details...")
                 self.details = driver.find_elements(By.CSS_SELECTOR, PLACE_DETAILS_SELECTOR)
-                details = self.details
             else:
                 break
         # Find the website and the phone number
