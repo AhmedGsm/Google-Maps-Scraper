@@ -42,3 +42,24 @@ MYSQL_HOST = "localhost"
 MYSQL_USER = "root"
 MYSQL_PASSWORD = "0901"
 MYSQL_DATABASE = "googlemaps"
+
+# Find email from emails finders(hunter.io)
+# HUNTER.IO API keys!
+API_KEY_AHMED_GSM = "a32f0ffbdca8c63a0fb35db1e52a131cabc3b7c6"
+API_KEY_GSM_GENIUS = "a31f0ec3e949d9f9dab2afb2c80344dffa213e19"
+API_KEY_HMED_KHABER = "a663c098d8245ce32c013f1f55c99e223bf19c48"
+API_KEY_AHMED_CEO_SUCCES = "33e245d3f1c8d23eed6f2b4c379053917126a19d"
+API_KEY_AHMED_CEO_SUCCES_1983 = "f1f01a5d55ca2afedf7c9b39e36b593832efb639"
+
+HUNTER_API_KEYS_LIST = [API_KEY_AHMED_GSM,
+                        API_KEY_GSM_GENIUS,
+                        API_KEY_HMED_KHABER,
+                        API_KEY_AHMED_CEO_SUCCES,
+                        API_KEY_AHMED_CEO_SUCCES_1983]
+# FINDYMAIL API keys!
+FINDYMAIL_API_KEY_AHMED_GSM = "NaVzLp0SOcfe6GILO5fadGv0WTtAl88woNUcbHwh6bccf8dc"
+# SNOVIO
+SNOVIO_AHMEDGSM_USER_ID = "8251531ceaa60b16053d83c06690cb20"
+SNOVIO_AHMEDGSM_API_KEY = "7393e050e87c5aeb5731bbb9861e00ab"
+# Hunter.io endpoint
+endpoint = f"https://api.hunter.io/v2/domain-search"
