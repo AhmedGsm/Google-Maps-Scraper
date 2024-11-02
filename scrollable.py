@@ -36,7 +36,7 @@ class Scrollable:
             js_script = f"""
             var parentElement = document.querySelector("{parent_selector}");
             preScrollTop = parentElement.scrollTop
-            parentElement.scrollTo(0, preScrollTop + 50);
+            parentElement.scrollTo(0, preScrollTop + 150);
             if (preScrollTop == parentElement.scrollTop) {{
                 return true;
             }} else {{
@@ -52,7 +52,7 @@ class Scrollable:
                 # Manipulate places list and empty it after finishing
                 # Get the link of element
                 all_link_elements = driver.find_elements(By.CSS_SELECTOR, children_selector)
-                time.sleep(0.5)
+                time.sleep(1)
             link_elements = all_link_elements[0: NUMBER_ELEMENT_PER_SCROLL]
             places_links = []
             for l in link_elements:
@@ -69,11 +69,7 @@ class Scrollable:
             # Delete place elements from the DOM to prevent overloading the memory
             if delete_element:
                 for i in range(NUMBER_ELEMENT_PER_SCROLL):
-                    print("children_selector: " + children_selector)
-                    try:# For debugging only
-                        self.delete_js_dom_element(driver, children_selector)
-                    except:
-                        print("Cannot delete element!")
+                    self.delete_js_dom_element(driver, children_selector)
                     loop_callback()
                     time.sleep(LOOP_SCRAPING_INTERVAL_TIME)
 

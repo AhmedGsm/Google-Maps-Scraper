@@ -33,10 +33,9 @@ class Place:
                 EC.presence_of_all_elements_located((By.CSS_SELECTOR, PLACE_DETAILS_SELECTOR))
             )
 
-            if self.details:
-                time.sleep(2)
+            if not self.details:
                 print("Retrying to get place details...")
-                self.details = driver.find_elements(By.CSS_SELECTOR, PLACE_DETAILS_SELECTOR)
+                time.sleep(2)
             else:
                 break
         # Find the website and the phone number

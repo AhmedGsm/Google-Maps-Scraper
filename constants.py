@@ -1,6 +1,6 @@
 import re
 
-REQUEST = "software companies in new jersey"
+REQUEST = "grossistes pharmaceutique algerie"
 PROJECT_NAME = re.sub(" ", "_", REQUEST)
 BASIC_URL = "https://www.google.com/maps/search/"
 URL = BASIC_URL + REQUEST
@@ -35,7 +35,7 @@ PLACE_DETAILS_CONTAINER_SELECTOR = ".e07Vkf.kA9KIf"
 
 # OTHER REGEX
 WEBSITE_PATTERN = r"^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$"
-PHONE_NUMBER_PATTERN = r"^\+([0-9]{1,4}\s)+"
+PHONE_NUMBER_PATTERN = r"^\+?([0-9]{1,4}\s?)+$"
 
 # Database constants
 MYSQL_HOST = "localhost"
