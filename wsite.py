@@ -5,6 +5,7 @@ import mysql.connector
 from constants import *
 from drivermanipulator import DriverManipulator
 from finder import Finder
+from snovio_finder import SnovioFinder
 from model import Model
 from place import Place
 from scrollable import Scrollable
@@ -19,7 +20,8 @@ class Site(Scrollable):
         self.total_places_explored = 0
         self.find_email = True
         # Instantiate finder class
-        self.finder = Finder(HUNTER_API_KEYS_LIST, endpoint)
+        self.hunter_finder = Finder(HUNTER_API_KEYS_LIST, endpoint)
+        self.snov_finder = SnovioFinder(SNOV_API_KEYS_LIST)
         self.manipulator = DriverManipulator("edge")
         super().__init__()
 
@@ -64,7 +66,16 @@ class Site(Scrollable):
 
         # Find email by domain
         if self.find_email:
-            self.find_email_by_domain(place_url, place_website)
+            contacts = self.hunter_finder.find_email_by_domain(place_website)
+            if not contacts:
+                # Create snov.io email finder object
+                print("Switching to snov.io email finder")
+                contacts = self.snov_finder.get_domain_search(place_website)
+                if contacts:
+                    contacts = self.format_contacts_from_snovio_to_hunterio(contacts["data"])
+
+            # Save email details in the database
+            self.save_email_details_in_database(contacts, place_url)
 
         self.__place_index += 1
         # Wait between scraping places
@@ -74,14 +85,7 @@ class Site(Scrollable):
         # Call the function recursively
         self.scrape_tab(places, drivermanipulator)
 
-    def find_email_by_domain(self, place_url, place_website):
-        # Domain website
-        domain = place_website
-        # Request the server
-        self.finder.request_server(domain)
-        # Extract contacts details
-        contacts = self.finder.find_contacts()
-
+    def save_email_details_in_database(self, contacts, place_url):
         # Loop through the contacts list and extract email details
         is_first_email = True
         for c in contacts:
@@ -164,9 +168,35 @@ class Site(Scrollable):
                           verification_date,
                           status)
                 Model.insert_into_database(sql_request, values)
-        # Check the remaining credits
-        #finder.check_hunterio_credits()
 
+    def format_contacts_from_snovio_to_hunterio(self, data):
+        formatted_contacts = []
+        for i in range(len(data)):
+            # Initial contact object
+            contact = {}
+            contact["verification"] = {}
+            # Assign and format snovio contact details
+            contact["value"] = data[i]["email"]
+            contact["type"] = data[i]["type"]
+            contact["verification"]["status"] = data[i]["status"]
+            try:
+                contact["first_name"] = data[i]["first_name"]
+                contact["last_name"] = data[i]["last_name"]
+                contact["position"] = data[i]["position"]
+                contact["linkedin"] = data[i]["sourcePage"]
+            except:
+                contact["first_name"] = "N/A"
+                contact["last_name"] = "N/A"
+                contact["position"] = "N/A"
+                contact["linkedin"] = "N/A"
+            contact["confidence"] = "N/A"
+            contact["seniority"] = "N/A"
+            contact["department"] = "N/A"
+            contact["twitter"] = "N/A"
+            contact["phone_number"] = "N/A"
+            contact["verification"]["date"] = "N/A"
+            formatted_contacts.append(contact)
+        return formatted_contacts
 
     def scrape_places_callback(self, *args):
         self.__total_places_index += 1
@@ -183,7 +213,7 @@ class Site(Scrollable):
 
             self.scrape_tab(self.places, self.manipulator)
         else:
-            time.sleep(TIME_1)
+            time.sleep(TIME_8)
 
         # Increment current counter
         #self.index += 1

@@ -1,6 +1,6 @@
 import re
 
-REQUEST = "grossistes pharmaceutique algerie"
+REQUEST = "real estate in Bay Area"
 PROJECT_NAME = re.sub(" ", "_", REQUEST)
 BASIC_URL = "https://www.google.com/maps/search/"
 URL = BASIC_URL + REQUEST
@@ -35,7 +35,7 @@ PLACE_DETAILS_CONTAINER_SELECTOR = ".e07Vkf.kA9KIf"
 
 # OTHER REGEX
 WEBSITE_PATTERN = r"^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$"
-PHONE_NUMBER_PATTERN = r"^\+?([0-9]{1,4}\s?)+$"
+PHONE_NUMBER_PATTERN = r"^\+?([0-9]{1,4}[\s-]?)+$"
 
 # Database constants
 MYSQL_HOST = "localhost"
@@ -50,16 +50,38 @@ API_KEY_GSM_GENIUS = "a31f0ec3e949d9f9dab2afb2c80344dffa213e19"
 API_KEY_HMED_KHABER = "a663c098d8245ce32c013f1f55c99e223bf19c48"
 API_KEY_AHMED_CEO_SUCCES = "33e245d3f1c8d23eed6f2b4c379053917126a19d"
 API_KEY_AHMED_CEO_SUCCES_1983 = "f1f01a5d55ca2afedf7c9b39e36b593832efb639"
+API_KEY_MOHAND_TAHAR = "6dde052b224d3d08b7b6cedb618bebb6d5939f5c"
+API_KEY_NESRINE = "95e154b6e3b1e134c3ed3a277ed66ca2e2a53aa6"
 
-HUNTER_API_KEYS_LIST = [API_KEY_AHMED_GSM,
-                        API_KEY_GSM_GENIUS,
-                        API_KEY_HMED_KHABER,
-                        API_KEY_AHMED_CEO_SUCCES,
-                        API_KEY_AHMED_CEO_SUCCES_1983]
-# FINDYMAIL API keys!
-FINDYMAIL_API_KEY_AHMED_GSM = "NaVzLp0SOcfe6GILO5fadGv0WTtAl88woNUcbHwh6bccf8dc"
-# SNOVIO
-SNOVIO_AHMEDGSM_USER_ID = "8251531ceaa60b16053d83c06690cb20"
-SNOVIO_AHMEDGSM_API_KEY = "7393e050e87c5aeb5731bbb9861e00ab"
 # Hunter.io endpoint
 endpoint = f"https://api.hunter.io/v2/domain-search"
+HUNTER_API_KEYS_LIST = [API_KEY_AHMED_GSM,
+                        #API_KEY_GSM_GENIUS,
+                        #API_KEY_HMED_KHABER,
+                        #API_KEY_AHMED_CEO_SUCCES,
+                        #API_KEY_AHMED_CEO_SUCCES_1983,
+                        #API_KEY_MOHTAHAR,
+                        #API_KEY_NESRINE
+]
+
+# Snov.io api keys
+SNOV_API_KEYS_LIST = [
+]
+"""{# AhmedGsm1983@gmail.com
+'client_id': "8251531ceaa60b16053d83c06690cb20",
+'client_secret': "7393e050e87c5aeb5731bbb9861e00ab"
+},
+{# gsmgeniu2015@gmail.com
+'client_id': "5e939d2fcae4106f0e4b50fdd546e795",
+'client_secret': "d609fa39f3493e1c863563c0fde4530a"
+},
+{# hmedkhaber@gmail.com
+'client_id': "0515263d08a8721185b0733e86893838",
+'client_secret': "956ce038fbb75526ae53682e2904c8c1"
+},
+{# ahmedceosuccess@gmail.com
+'client_id': "8511689682d4b31f8dab5bc96c1893a1",
+'client_secret': "51084aa1c4c457c4d9dd01d7cf09075f"
+}"""
+# FINDYMAIL API keys!
+FINDYMAIL_API_KEY_AHMED_GSM = "NaVzLp0SOcfe6GILO5fadGv0WTtAl88woNUcbHwh6bccf8dc"

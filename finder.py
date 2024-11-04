@@ -14,6 +14,9 @@ class Finder:
         pass
 
     def request_server(self, domain):
+        # Put base case for the function
+        if self.key_index == len(self.api_keys_list):
+            return -1
         # For debugging
         print("API Key number: " + str(self.key_index + 1) + " is in use!")
         # Assign params attribute
@@ -48,6 +51,17 @@ class Finder:
         return self.contacts
 
 
+    def find_email_by_domain(self, place_website):
+        # Domain website
+        domain = place_website
+        # Request the server
+        if self.request_server(domain) == -1:
+            return []
+        # Extract contacts details
+        return self.find_contacts()
+
+        # Check the remaining credits
+        #finder.check_hunterio_credits()
     def check_hunterio_credits(self):
         url = f"https://api.hunter.io/v2/account?api_key={self.api_keys_list[self.key_index]}"  # replace with the actual URL you want to request
         try:
