@@ -47,7 +47,7 @@ class Site(Scrollable):
         place_address = place.scrape_address()
         place_website = place.scrape_website()
         place_phone = place.scrape_phone_number()
-        print("Place address: " + place_address)
+        print("Place address: " + str(place_address))
         print("Place website: " + str(place_website))
         print("Place phone number: " + str(place_phone))
 
@@ -77,7 +77,8 @@ class Site(Scrollable):
             WHERE website = %s"""
             values = values + (place_website,)
             Model.update_database(update_request, values)
-        Model.insert_into_database(sql_request, values)
+        else:
+            Model.insert_into_database(sql_request, values)
 
 
         # Find email by domain

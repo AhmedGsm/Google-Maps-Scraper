@@ -39,7 +39,7 @@ class Place:
             else:
                 break
         # Find the website and the phone number
-        is_website_found = False
+        """is_website_found = False
         is_phone_number_found = False
         for detail in self.details:
             # If the website and the phone number are found then stop searching
@@ -52,13 +52,34 @@ class Place:
             # Check if the current element is a phone number
             if re.match(PHONE_NUMBER_PATTERN, detail.text):
                 self.phone_number = detail.text
-                is_phone_number_found = True
+                is_phone_number_found = True"""
 
     def scrape_address(self):
-        return self.details[0].text
+        # Find the <div> element containing the phone number by first locating the span with ''
+        try:
+            return self.driver.find_element(
+                By.XPATH,
+                "//span[contains(text(), '')]/ancestor::div[contains(@class, 'AeaXub')]//div[contains(@class, 'Io6YTe')]"
+            ).text
+        except:
+            return None
 
     def scrape_website(self):
-        return self.website
+        # Find the <div> element containing the phone number by first locating the span with ''
+        try:
+            return self.driver.find_element(
+                By.XPATH,
+                "//span[contains(text(), '')]/ancestor::div[contains(@class, 'AeaXub')]//div[contains(@class, 'Io6YTe')]"
+            ).text
+        except:
+            return None
 
     def scrape_phone_number(self):
-        return self.phone_number
+        # Find the <div> element containing the phone number by first locating the span with ''
+        try:
+            return self.driver.find_element(
+                By.XPATH,
+                "//span[contains(text(), '')]/ancestor::div[contains(@class, 'AeaXub')]//div[contains(@class, 'Io6YTe')]"
+            ).text
+        except:
+            return None
