@@ -19,6 +19,8 @@ class Site(Scrollable):
         self.__total_places_index = 0
         self.total_places_explored = 0
         self.find_email = True
+        # No not assign this value, because it will update from callback function in scrollable.py
+        self.update_entries = None
         # Instantiate finder class
         self.hunter_finder = Finder(HUNTER_API_KEYS_LIST, endpoint)
         self.snov_finder = SnovioFinder(SNOV_API_KEYS_LIST)
@@ -62,7 +64,21 @@ class Site(Scrollable):
                   place_address,
                   place_phone,
                   place_website)
+
+        # Convert insert to update request if the entry is exists in the database
+        update_request = ""
+        if self.update_entries:
+            update_request = f"""UPDATE googlemaps.places SET
+            project_name = %s,
+            place_url = %s,
+            address = %s,
+            phone = %s,
+            website = %s 
+            WHERE website = %s"""
+            values = values + (place_website,)
+            Model.update_database(update_request, values)
         Model.insert_into_database(sql_request, values)
+
 
         # Find email by domain
         if self.find_email:
@@ -167,6 +183,7 @@ class Site(Scrollable):
                           phone_number,
                           verification_date,
                           status)
+                # Insert entries or update if they are already exist
                 Model.insert_into_database(sql_request, values)
 
     def format_contacts_from_snovio_to_hunterio(self, data):
@@ -204,10 +221,14 @@ class Site(Scrollable):
         return
 
     def manipulate_places_callback(self, *args):
+        # Check if update entries is activated from the callback function!
+        self.update_entries = args[1]
+
+        # If places list is empty then quit
         if not args[0]:
             return
         self.places = args[0]
-        place_index = 0
+
         # If the index is equal to total place explored
         if self.__total_places_index >= self.total_places_explored:
 

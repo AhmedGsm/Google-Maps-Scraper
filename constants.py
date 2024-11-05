@@ -1,6 +1,9 @@
 import re
 
+REQUEST0 = "real estate in Bay Area"
+REQUEST1 = "Real estate in Chicago city"
 REQUEST = "real estate in Bay Area"
+
 PROJECT_NAME = re.sub(" ", "_", REQUEST)
 BASIC_URL = "https://www.google.com/maps/search/"
 URL = BASIC_URL + REQUEST

@@ -27,12 +27,13 @@ class Model:
         return cursor, db
 
     @staticmethod
-    def insert_into_database(sql_request, values, error_message=""):
+    def insert_into_database(sql_request, values):
         model = Model()
         try:
             model.insert_into_table(sql_request, values)
         except Exception as e:
             print(str(e))
+
 
     @staticmethod
     def read_from_database(sql_request):

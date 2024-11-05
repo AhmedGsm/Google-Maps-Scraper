@@ -12,6 +12,7 @@ class Scrollable:
     def __init__(self):
         self.is_element_found = False
         self.scrape_index = 0
+        self.update_entries = True
         pass
 
     def scroll_and_callback(self, driver, parent_selector, children_selector, load_time,
@@ -60,11 +61,11 @@ class Scrollable:
                 entries = Model.read_from_database(f"SELECT website FROM googlemaps.places WHERE place_url = '{place_url}' ")
                 # If the place is saved in the database do not add it to the list
                 # to prevent re-explore it!
-                if not entries:
+                if not entries or self.update_entries:
                     places_links.append(place_url)
 
             # Run conditional callback function to treat place list
-            bulk_callback(places_links)
+            bulk_callback(places_links, self.update_entries)
 
             # Delete place elements from the DOM to prevent overloading the memory
             if delete_element:
