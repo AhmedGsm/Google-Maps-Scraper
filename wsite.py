@@ -19,7 +19,7 @@ class Site(Scrollable):
         self.__total_places_index = 0
         self.total_places_explored = 0
         self.find_email = True
-        # No not assign this value, because it will update from callback function in scrollable.py
+        # No not assign this value, because it will update from the callback function in scrollable.py
         self.update_entries = None
         # Instantiate finder class
         self.hunter_finder = Finder(HUNTER_API_KEYS_LIST, endpoint)

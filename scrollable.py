@@ -70,9 +70,28 @@ class Scrollable:
             # Delete place elements from the DOM to prevent overloading the memory
             if delete_element:
                 for i in range(NUMBER_ELEMENT_PER_SCROLL):
-                    self.delete_js_dom_element(driver, children_selector)
+                    # Delete the container
+                    try: # For debugging only!
+                        self.delete_js_dom_parent_node(driver, children_selector)
+                    except:
+                        pass
+                    # Delete the lines above the children
+                    try:
+                        self.delete_js_dom_element(driver, ".TFQHme")
+                    except:
+                        pass
+                    # Call Callback function
                     loop_callback()
                     time.sleep(LOOP_SCRAPING_INTERVAL_TIME)
+
+    def delete_js_dom_parent_node(self, driver, children_selector):
+        script = f""" 
+            var likersDivs = document.querySelector('{children_selector}');
+            if (likersDivs && likersDivs.parentNode) {{
+                likersDivs.parentNode.remove();
+            }}
+            """
+        driver.execute_script(script)
 
     def delete_js_dom_element(self, driver, children_selector):
         script = f""" 
