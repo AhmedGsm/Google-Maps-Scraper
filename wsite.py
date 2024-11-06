@@ -1,3 +1,4 @@
+import re
 import threading
 import time
 import mysql.connector
@@ -41,6 +42,8 @@ class Site(Scrollable):
     def explore_place_details(self, drivermanipulator, places):
         # Go to page URL
         place_url = places[self.__place_index]
+        # Change language of URL
+        place_url = re.sub(r"&hl=fr", f"&hl={LANG}", place_url)
         print("place_url: " + place_url)
         drivermanipulator.land_page_url(place_url)
         place = Place(drivermanipulator.driver)
