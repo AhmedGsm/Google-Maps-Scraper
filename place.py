@@ -38,21 +38,9 @@ class Place:
                 time.sleep(2)
             else:
                 break
-        # Find the website and the phone number
-        """is_website_found = False
-        is_phone_number_found = False
-        for detail in self.details:
-            # If the website and the phone number are found then stop searching
-            if is_website_found and is_phone_number_found:
-                break
-            # Check if the current element is a website
-            if re.match(WEBSITE_PATTERN, detail.text):
-                self.website = detail.text
-                is_website_found = True
-            # Check if the current element is a phone number
-            if re.match(PHONE_NUMBER_PATTERN, detail.text):
-                self.phone_number = detail.text
-                is_phone_number_found = True"""
+
+    def scrape_name(self):
+        return self.driver.find_element(By.CSS_SELECTOR, ".DUwDvf.lfPIob").get_attribute("outerHTML")
 
     def scrape_address(self):
         # Find the <div> element containing the phone number by first locating the span with ''

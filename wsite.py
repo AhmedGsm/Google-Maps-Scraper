@@ -19,7 +19,7 @@ class Site(Scrollable):
         self.__place_index = 0
         self.__total_places_index = 0
         self.total_places_explored = 0
-        self.find_email = True
+        self.find_email = False
         # No not assign this value, because it will update from the callback function in scrollable.py
         self.update_entries = None
         # Instantiate finder class
@@ -48,10 +48,13 @@ class Site(Scrollable):
         drivermanipulator.land_page_url(place_url)
         place = Place(drivermanipulator.driver)
         self.short_url = place_url.split("/data=!")[0]
+        place_name_raw = place.scrape_name()
+        place_name = re.search("<.*?/.*?>(.*?)<.*?/.*?>", place_name_raw, re.DOTALL).group(1).strip()
         place_address = place.scrape_address()
         place_website = place.scrape_website()
         place_phone = place.scrape_phone_number()
         print("Short URL: " + self.short_url)
+        print("Place name: " + str(place_name))
         print("Place address: " + str(place_address))
         print("Place website: " + str(place_website))
         print("Place phone number: " + str(place_phone))
@@ -61,13 +64,15 @@ class Site(Scrollable):
         project_name,
         place_url,
         short_url,
+        name,
         address,
         phone,
         website) VALUES (
-        %s, %s, %s, %s, %s, %s)"""
+        %s, %s, %s, %s, %s, %s, %s)"""
         values = (PROJECT_NAME,
                   place_url,
                   self.short_url,
+                  place_name,
                   place_address,
                   place_phone,
                   place_website)
@@ -77,11 +82,12 @@ class Site(Scrollable):
         if self.update_entries:
             update_request = f"""UPDATE googlemaps.places SET
             project_name = %s,
+            name = %s,
             address = %s,
             phone = %s,
             website = %s 
             WHERE place_url = %s """
-            update_values = (PROJECT_NAME, place_address, place_phone, place_website, place_url)
+            update_values = (PROJECT_NAME, place_name, place_address, place_phone, place_website, place_url)
             Model.insert_into_database(sql_request, values, True, update_request, update_values)
         else:
             Model.insert_into_database(sql_request, values)
@@ -163,6 +169,7 @@ class Site(Scrollable):
                 sql_request = """INSERT INTO googlemaps.places (
                                     project_name,
                                     place_url,
+                                    name,
                                     address,
                                     phone,
                                     website
@@ -179,12 +186,12 @@ class Site(Scrollable):
                                     phone_number,
                                     verification_date,
                                     email_status) VALUES (
-                                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                 values = (PROJECT_NAME,
                           values[1],
-                          values[3],
                           values[4],
                           values[5],
+                          values[6],
                           email,
                           email_type,
                           email_confidence,
