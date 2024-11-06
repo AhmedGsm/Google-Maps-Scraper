@@ -45,7 +45,7 @@ class Scrollable:
             }}
             """
 
-            while len(all_link_elements) < NUMBER_ELEMENT_PER_SCROLL * 2:
+            while len(all_link_elements) < NUMBER_ELEMENT_PER_SCROLL * 3:
                 end_of_scrolling = driver.execute_script(js_script)
                 if end_of_scrolling:
                     print("Container arrives to end of scrolling!")

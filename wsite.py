@@ -19,7 +19,7 @@ class Site(Scrollable):
         self.__place_index = 0
         self.__total_places_index = 0
         self.total_places_explored = 0
-        self.find_email = False
+        self.find_email = True
         # No not assign this value, because it will update from the callback function in scrollable.py
         self.update_entries = None
         # Instantiate finder class
@@ -64,7 +64,7 @@ class Site(Scrollable):
         address,
         phone,
         website) VALUES (
-        %s, %s, %s, %s, %s)"""
+        %s, %s, %s, %s, %s, %s)"""
         values = (PROJECT_NAME,
                   place_url,
                   self.short_url,
@@ -80,9 +80,9 @@ class Site(Scrollable):
             address = %s,
             phone = %s,
             website = %s 
-            WHERE email LIKE %s"""
-            values = (PROJECT_NAME, place_address, place_phone, place_website, f"%@{place_website}")
-            Model.update_database(update_request, values)
+            WHERE place_url = %s """
+            update_values = (PROJECT_NAME, place_address, place_phone, place_website, place_url)
+            Model.insert_into_database(sql_request, values, True, update_request, update_values)
         else:
             Model.insert_into_database(sql_request, values)
 
@@ -98,7 +98,7 @@ class Site(Scrollable):
                     contacts = self.format_contacts_from_snovio_to_hunterio(contacts["data"])
 
             # Save email details in the database
-            self.save_email_details_in_database(contacts, place_url, place_website)
+            self.save_email_details_in_database(contacts, values)
 
         self.__place_index += 1
         # Wait between scraping places
@@ -108,7 +108,7 @@ class Site(Scrollable):
         # Call the function recursively
         self.scrape_tab(places, drivermanipulator)
 
-    def save_email_details_in_database(self, contacts, place_url, place_website):
+    def save_email_details_in_database(self, contacts, values):
         # Loop through the contacts list and extract email details
         is_first_email = True
         for c in contacts:
@@ -144,14 +144,14 @@ class Site(Scrollable):
                         phone_number = %s,
                         verification_date = %s,
                         email_status = %s
-                    WHERE email LIKE %s"""
+                    WHERE place_url = %s """
 
 
                 # Define your values, including the `website` value for the WHERE clause
                 values = (
                     PROJECT_NAME, email, email_type, email_confidence, first_name,
                     last_name, position, seniority, department, linkedin, twitter,
-                    phone_number, verification_date, status, f"%@{place_website}"
+                    phone_number, verification_date, status, values[1]
                 )
 
                 # Update the first entry
@@ -162,6 +162,10 @@ class Site(Scrollable):
                 # Save scraped data in Product table
                 sql_request = """INSERT INTO googlemaps.places (
                                     project_name,
+                                    place_url,
+                                    address,
+                                    phone,
+                                    website
                                     email,
                                     email_type,
                                     email_confidence,
@@ -175,8 +179,12 @@ class Site(Scrollable):
                                     phone_number,
                                     verification_date,
                                     email_status) VALUES (
-                                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                 values = (PROJECT_NAME,
+                          values[1],
+                          values[3],
+                          values[4],
+                          values[5],
                           email,
                           email_type,
                           email_confidence,
