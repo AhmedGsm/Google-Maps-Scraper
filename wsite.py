@@ -81,18 +81,20 @@ class Site(Scrollable):
         # Convert insert to update request if the entry is exists in the database
         update_request = ""
         if self.update_entries:
-            update_request = f"""UPDATE googlemaps.places SET
+            update_request = """UPDATE googlemaps.places SET
             project_name = %s,
+            place_url = %s,
+            short_url = %s,
             name = %s,
             address = %s,
             phone = %s,
             website = %s 
-            WHERE place_url = %s """
-            update_values = (PROJECT_NAME, self.place_name, self.place_address, self.place_phone, self.place_website, self.place_url)
+            WHERE email LIKE %s """
+            update_values = (PROJECT_NAME, self.place_url, self.short_url, self.place_name, self.place_address, self.place_phone,
+                             self.place_website, f'@{self.place_website}')
             Model.insert_into_database(sql_request, values, True, update_request, update_values)
         else:
             Model.insert_into_database(sql_request, values)
-
 
         # Find email by domain
         if self.find_email:

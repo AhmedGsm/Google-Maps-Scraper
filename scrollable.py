@@ -47,10 +47,10 @@ class Scrollable:
             scrolling_end_count = 0
             while len(all_link_elements) < NUMBER_ELEMENT_PER_SCROLL * 3:
                 end_of_scrolling = driver.execute_script(js_script)
-                time.sleep(0.3)
+                time.sleep(0.5)
                 # If the scrolling blocks 5 time then quit the loop
                 if len(driver.find_elements(By.CSS_SELECTOR, children_selector)) == len(all_link_elements):
-                    if scrolling_end_count == 10:
+                    if scrolling_end_count == 20:
                         print("Container arrives to end of scrolling!")
                         break
                     scrolling_end_count += 1

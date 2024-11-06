@@ -28,16 +28,6 @@ class Place:
         """
         driver.execute_script(js_script, PLACE_DETAILS_CONTAINER_SELECTOR)
         # Get places details
-        while True:
-            self.details = WebDriverWait(driver, WAIT_ELEMENT_APPEAR).until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, PLACE_DETAILS_SELECTOR))
-            )
-
-            if not self.details:
-                print("Retrying to get place details...")
-                time.sleep(2)
-            else:
-                break
 
     def scrape_name(self):
         place_name_raw = self.driver.find_element(By.CSS_SELECTOR, ".DUwDvf.lfPIob").get_attribute("outerHTML")
@@ -58,7 +48,7 @@ class Place:
                 elif i == retrying_time:
                     return None
                 i += 1
-                print("Retrying to scrape place address...")
+                print("Retrying to scrape place address...DO not minimize your browser")
                 time.sleep(1)
         except:
             return None
