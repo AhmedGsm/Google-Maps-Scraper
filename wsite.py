@@ -19,7 +19,7 @@ class Site(Scrollable):
         self.__place_index = 0
         self.__total_places_index = 0
         self.total_places_explored = 0
-        self.find_email = True
+        self.find_email = False
         # No not assign this value, because it will update from the callback function in scrollable.py
         self.update_entries = None
         # Instantiate finder class
@@ -47,11 +47,11 @@ class Site(Scrollable):
         print("place_url: " + place_url)
         drivermanipulator.land_page_url(place_url)
         place = Place(drivermanipulator.driver)
-        short_url = place_url.split("/data=!")[0]
+        self.short_url = place_url.split("/data=!")[0]
         place_address = place.scrape_address()
         place_website = place.scrape_website()
         place_phone = place.scrape_phone_number()
-        print("Short URL: " + short_url)
+        print("Short URL: " + self.short_url)
         print("Place address: " + str(place_address))
         print("Place website: " + str(place_website))
         print("Place phone number: " + str(place_phone))
@@ -67,7 +67,7 @@ class Site(Scrollable):
         %s, %s, %s, %s, %s)"""
         values = (PROJECT_NAME,
                   place_url,
-                  short_url,
+                  self.short_url,
                   place_address,
                   place_phone,
                   place_website)
@@ -77,12 +77,11 @@ class Site(Scrollable):
         if self.update_entries:
             update_request = f"""UPDATE googlemaps.places SET
             project_name = %s,
-            short_url = %s,
             address = %s,
             phone = %s,
             website = %s 
-            WHERE place_url = %s"""
-            values = (PROJECT_NAME, short_url, place_address, place_phone, place_website, place_url)
+            WHERE email LIKE %s"""
+            values = (PROJECT_NAME, place_address, place_phone, place_website, f"%@{place_website}")
             Model.update_database(update_request, values)
         else:
             Model.insert_into_database(sql_request, values)
@@ -99,7 +98,7 @@ class Site(Scrollable):
                     contacts = self.format_contacts_from_snovio_to_hunterio(contacts["data"])
 
             # Save email details in the database
-            self.save_email_details_in_database(contacts, place_url)
+            self.save_email_details_in_database(contacts, place_url, place_website)
 
         self.__place_index += 1
         # Wait between scraping places
@@ -109,7 +108,7 @@ class Site(Scrollable):
         # Call the function recursively
         self.scrape_tab(places, drivermanipulator)
 
-    def save_email_details_in_database(self, contacts, place_url):
+    def save_email_details_in_database(self, contacts, place_url, place_website):
         # Loop through the contacts list and extract email details
         is_first_email = True
         for c in contacts:
@@ -145,14 +144,14 @@ class Site(Scrollable):
                         phone_number = %s,
                         verification_date = %s,
                         email_status = %s
-                    WHERE place_url = %s
-                """
+                    WHERE email LIKE %s"""
+
 
                 # Define your values, including the `website` value for the WHERE clause
                 values = (
                     PROJECT_NAME, email, email_type, email_confidence, first_name,
                     last_name, position, seniority, department, linkedin, twitter,
-                    phone_number, verification_date, status, place_url
+                    phone_number, verification_date, status, f"%@{place_website}"
                 )
 
                 # Update the first entry
