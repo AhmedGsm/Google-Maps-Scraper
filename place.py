@@ -40,15 +40,26 @@ class Place:
                 break
 
     def scrape_name(self):
-        return self.driver.find_element(By.CSS_SELECTOR, ".DUwDvf.lfPIob").get_attribute("outerHTML")
+        place_name_raw = self.driver.find_element(By.CSS_SELECTOR, ".DUwDvf.lfPIob").get_attribute("outerHTML")
+        return re.search("<.*?/.*?>(.*?)<.*?/.*?>", place_name_raw, re.DOTALL).group(1).strip()
 
     def scrape_address(self):
+        i = 0
+        retrying_time = 3600# Retry in 1 hours until the browser is active(not in the background or minimized!)
         # Find the <div> element containing the phone number by first locating the span with ''
         try:
-            return self.driver.find_element(
-                By.XPATH,
-                "//span[contains(text(), '')]/ancestor::div[contains(@class, 'AeaXub')]//div[contains(@class, 'Io6YTe')]"
-            ).text
+            while True:
+                address = self.driver.find_element(
+                    By.XPATH,
+                    "//span[contains(text(), '')]/ancestor::div[contains(@class, 'AeaXub')]//div[contains(@class, 'Io6YTe')]"
+                ).text
+                if address:
+                    return address
+                elif i == retrying_time:
+                    return None
+                i += 1
+                print("Retrying to scrape place address...")
+                time.sleep(1)
         except:
             return None
 

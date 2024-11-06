@@ -3,11 +3,12 @@ import re
 REQUEST0 = "real estate in Bay Area"
 REQUEST1 = "Real estate in Chicago city"
 REQUEST2 = "real estate in Bay Area"
-REQUEST = "real estate in sydney"
-
-PROJECT_NAME = re.sub(" ", "_", REQUEST)
+REQUEST3 = "real estate in sydney"
+REQUEST = "real estate in Bay Area"
+q = REQUEST
+PROJECT_NAME = re.sub(" ", "_", q)
 BASIC_URL = "https://www.google.com/maps/search/"
-URL = BASIC_URL + REQUEST
+URL = BASIC_URL + q
 PARALLEL_BROWSER_INSTANCES_COUNT = 1
 LOOP_SCRAPING_INTERVAL_TIME = 0.2
 WAIT_ELEMENT_To_APPEAR = 20

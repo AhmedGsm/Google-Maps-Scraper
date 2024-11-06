@@ -44,16 +44,20 @@ class Scrollable:
                 return false;
             }}
             """
-
+            scrolling_end_count = 0
             while len(all_link_elements) < NUMBER_ELEMENT_PER_SCROLL * 3:
                 end_of_scrolling = driver.execute_script(js_script)
-                if end_of_scrolling:
-                    print("Container arrives to end of scrolling!")
-                    break
+                time.sleep(0.3)
+                # If the scrolling blocks 5 time then quit the loop
+                if len(driver.find_elements(By.CSS_SELECTOR, children_selector)) == len(all_link_elements):
+                    if scrolling_end_count == 10:
+                        print("Container arrives to end of scrolling!")
+                        break
+                    scrolling_end_count += 1
                 # Manipulate places list and empty it after finishing
                 # Get the link of element
                 all_link_elements = driver.find_elements(By.CSS_SELECTOR, children_selector)
-                time.sleep(1)
+                #time.sleep(2)
             link_elements = all_link_elements[0: NUMBER_ELEMENT_PER_SCROLL]
             places_links = []
             for l in link_elements:

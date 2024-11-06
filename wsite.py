@@ -43,21 +43,22 @@ class Site(Scrollable):
         # Go to page URL
         place_url = places[self.__place_index]
         # Change language of URL
-        place_url = re.sub(r"&hl=fr", f"&hl={LANG}", place_url)
+        self.place_url = re.sub(r"&hl=fr", f"&hl={LANG}", place_url)
         print("place_url: " + place_url)
-        drivermanipulator.land_page_url(place_url)
+        drivermanipulator.land_page_url(self.place_url)
         place = Place(drivermanipulator.driver)
         self.short_url = place_url.split("/data=!")[0]
-        place_name_raw = place.scrape_name()
-        place_name = re.search("<.*?/.*?>(.*?)<.*?/.*?>", place_name_raw, re.DOTALL).group(1).strip()
-        place_address = place.scrape_address()
-        place_website = place.scrape_website()
-        place_phone = place.scrape_phone_number()
+        self.place_name = place.scrape_name()
+        self.place_address = place.scrape_address()
+        if not self.place_address:# For debugging only
+            print("Empty address")
+        self.place_website = place.scrape_website()
+        self.place_phone = place.scrape_phone_number()
         print("Short URL: " + self.short_url)
-        print("Place name: " + str(place_name))
-        print("Place address: " + str(place_address))
-        print("Place website: " + str(place_website))
-        print("Place phone number: " + str(place_phone))
+        print("Place name: " + str(self.place_name))
+        print("Place address: " + str(self.place_address))
+        print("Place website: " + str(self.place_website))
+        print("Place phone number: " + str(self.place_phone))
 
         # Save scraped data in Product table
         sql_request = """INSERT INTO googlemaps.places (
@@ -70,12 +71,12 @@ class Site(Scrollable):
         website) VALUES (
         %s, %s, %s, %s, %s, %s, %s)"""
         values = (PROJECT_NAME,
-                  place_url,
+                  self.place_url,
                   self.short_url,
-                  place_name,
-                  place_address,
-                  place_phone,
-                  place_website)
+                  self.place_name,
+                  self.place_address,
+                  self.place_phone,
+                  self.place_website)
 
         # Convert insert to update request if the entry is exists in the database
         update_request = ""
@@ -87,7 +88,7 @@ class Site(Scrollable):
             phone = %s,
             website = %s 
             WHERE place_url = %s """
-            update_values = (PROJECT_NAME, place_name, place_address, place_phone, place_website, place_url)
+            update_values = (PROJECT_NAME, self.place_name, self.place_address, self.place_phone, self.place_website, self.place_url)
             Model.insert_into_database(sql_request, values, True, update_request, update_values)
         else:
             Model.insert_into_database(sql_request, values)
@@ -95,11 +96,11 @@ class Site(Scrollable):
 
         # Find email by domain
         if self.find_email:
-            contacts = self.hunter_finder.find_email_by_domain(place_website)
+            contacts = self.hunter_finder.find_email_by_domain(self.place_website)
             if not contacts:
                 # Create snov.io email finder object
                 print("Switching to snov.io email finder")
-                contacts = self.snov_finder.get_domain_search(place_website)
+                contacts = self.snov_finder.get_domain_search(self.place_website)
                 if contacts:
                     contacts = self.format_contacts_from_snovio_to_hunterio(contacts["data"])
 
@@ -188,10 +189,11 @@ class Site(Scrollable):
                                     email_status) VALUES (
                                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                 values = (PROJECT_NAME,
-                          values[1],
-                          values[4],
-                          values[5],
-                          values[6],
+                          self.place_url,
+                          self.place_name,
+                          self.place_address,
+                          self.place_phone,
+                          self.place_website,
                           email,
                           email_type,
                           email_confidence,
