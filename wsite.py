@@ -70,12 +70,11 @@ class Site(Scrollable):
         if self.update_entries:
             update_request = f"""UPDATE googlemaps.places SET
             project_name = %s,
-            place_url = %s,
             address = %s,
             phone = %s,
             website = %s 
-            WHERE website = %s"""
-            values = values + (place_website,)
+            WHERE place_url = %s"""
+            values = (PROJECT_NAME, place_address, place_phone, place_website, place_url)
             Model.update_database(update_request, values)
         else:
             Model.insert_into_database(sql_request, values)
