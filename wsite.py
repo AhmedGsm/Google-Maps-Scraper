@@ -44,9 +44,11 @@ class Site(Scrollable):
         print("place_url: " + place_url)
         drivermanipulator.land_page_url(place_url)
         place = Place(drivermanipulator.driver)
+        short_url = place_url.split("/data=!")[0]
         place_address = place.scrape_address()
         place_website = place.scrape_website()
         place_phone = place.scrape_phone_number()
+        print("Short URL: " + short_url)
         print("Place address: " + str(place_address))
         print("Place website: " + str(place_website))
         print("Place phone number: " + str(place_phone))
@@ -55,12 +57,14 @@ class Site(Scrollable):
         sql_request = """INSERT INTO googlemaps.places (
         project_name,
         place_url,
+        short_url,
         address,
         phone,
         website) VALUES (
         %s, %s, %s, %s, %s)"""
         values = (PROJECT_NAME,
                   place_url,
+                  short_url,
                   place_address,
                   place_phone,
                   place_website)
@@ -70,11 +74,12 @@ class Site(Scrollable):
         if self.update_entries:
             update_request = f"""UPDATE googlemaps.places SET
             project_name = %s,
+            short_url = %s,
             address = %s,
             phone = %s,
             website = %s 
             WHERE place_url = %s"""
-            values = (PROJECT_NAME, place_address, place_phone, place_website, place_url)
+            values = (PROJECT_NAME, short_url, place_address, place_phone, place_website, place_url)
             Model.update_database(update_request, values)
         else:
             Model.insert_into_database(sql_request, values)
