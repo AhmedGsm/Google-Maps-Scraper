@@ -11,9 +11,11 @@ from wsite import Site
 class WindowApp(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.driver_manipulator = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.searchButton.clicked.connect(self.on_searchButton_clicked)
+        self.ui.stopScrapingButton.clicked.connect(self.on_stopScrapingButton_clicked)
 
     def on_searchButton_clicked(self):
         print("on_searchButton_clicked clicked")
@@ -21,12 +23,26 @@ class WindowApp(QMainWindow):
         startScrapingThread.start()
         #startScrapingThread.join()
 
+    def on_stopScrapingButton_clicked(self):
+        print("on_stopScrapingButton_clicked clicked")
+        stopScrapingThread = threading.Thread(target=self.stopScraping)
+        stopScrapingThread.start()
+        stopScrapingThread.join()
+
+
     def startScraping(self):
-        driver_manipulator = DriverManipulator()
-        googlemapssite = Site(driver_manipulator)
-        googlemapssite.scrape_site(self.ui.searchEdit.text())
-        input("Enter any key to exit!")
-        driver_manipulator.driver.quit()
+        self.driver_manipulator = DriverManipulator()
+        self.googlemapssite = Site(self.driver_manipulator)
+        self.googlemapssite.scrape_site(self.ui.searchEdit.text())
+        self.driver_manipulator.driver.quit()
+        # Quit the second driver(edge)
+        self.googlemapssite.manipulator.quit()
+
+    def stopScraping(self):
+        self.googlemapssite.stop_scraping()
+        # Quit the second driver(edge)
+        self.googlemapssite.manipulator.quit()
+        self.driver_manipulator.driver.quit()
 
 
 

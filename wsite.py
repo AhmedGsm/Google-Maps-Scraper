@@ -70,7 +70,7 @@ class Site(Scrollable):
         phone,
         website) VALUES (
         %s, %s, %s, %s, %s, %s, %s)"""
-        values = (PROJECT_NAME,
+        values = (PROJECT_CONFIG["name"],
                   self.place_url,
                   self.short_url,
                   self.place_name,
@@ -90,7 +90,7 @@ class Site(Scrollable):
             phone = %s,
             website = %s 
             WHERE email LIKE %s """
-            update_values = (PROJECT_NAME, self.place_url, self.short_url, self.place_name, self.place_address, self.place_phone,
+            update_values = (PROJECT_CONFIG["name"], self.place_url, self.short_url, self.place_name, self.place_address, self.place_phone,
                              self.place_website, f'@{self.place_website}')
             Model.insert_into_database(sql_request, values, True, update_request, update_values)
         else:
@@ -158,7 +158,7 @@ class Site(Scrollable):
 
                 # Define your values, including the `website` value for the WHERE clause
                 values = (
-                    PROJECT_NAME, email, email_type, email_confidence, first_name,
+                    PROJECT_CONFIG["name"], email, email_type, email_confidence, first_name,
                     last_name, position, seniority, department, linkedin, twitter,
                     phone_number, verification_date, status, values[1]
                 )
@@ -190,7 +190,7 @@ class Site(Scrollable):
                                     verification_date,
                                     email_status) VALUES (
                                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-                values = (PROJECT_NAME,
+                values = (PROJECT_CONFIG["name"],
                           self.place_url,
                           self.place_name,
                           self.place_address,
@@ -281,8 +281,10 @@ class Site(Scrollable):
                                    self.scrape_places_callback, self.manipulate_places_callback,
                                    end_message="Scraping finished!")
 
-    def scrape_site(self):
-        self.driver_manipulator.land_page_url(URL)
+    def scrape_site(self, query):
+        url = BASIC_URL + query
+        PROJECT_CONFIG["name"] = re.sub(" ", "_", query)
+        self.driver_manipulator.land_page_url(url)
         #self.parent_scrollable = self.driver_manipulator.driver.find_element(By.CSS_SELECTOR, PARENT_SCROLLABLE_SELECTOR)
         # places = self.driver.find_elements(By.CSS_SELECTOR, PLACE_CONTAINER_SELECTOR)
         self.scrape_places()

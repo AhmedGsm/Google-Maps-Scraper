@@ -7,11 +7,9 @@ REQUEST2 = "real estate in Bay Area"
 REQUEST3 = "real estate in sydney"
 REQUEST4 = "grossistes pharmaceutiques algerie"
 REQUEST5 = "software companies in new jersey"
-query = REQUEST5
 
-PROJECT_NAME = re.sub(" ", "_", query)
+PROJECT_CONFIG = {"name": ""}
 BASIC_URL = "https://www.google.com/maps/search/"
-URL = BASIC_URL + query
 PARALLEL_BROWSER_INSTANCES_COUNT = 1
 LOOP_SCRAPING_INTERVAL_TIME = 0.2
 WAIT_ELEMENT_To_APPEAR = 20

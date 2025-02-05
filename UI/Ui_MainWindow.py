@@ -65,13 +65,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3.addWidget(self.searchButton)
 
-        self.searchButton_2 = QPushButton(self.centralwidget)
-        self.searchButton_2.setObjectName(u"searchButton_2")
-        self.searchButton_2.setMinimumSize(QSize(0, 45))
-        self.searchButton_2.setMaximumSize(QSize(16777215, 45))
-        self.searchButton_2.setFont(font1)
+        self.stopScrapingButton = QPushButton(self.centralwidget)
+        self.stopScrapingButton.setObjectName(u"stopScrapingButton")
+        self.stopScrapingButton.setMinimumSize(QSize(0, 45))
+        self.stopScrapingButton.setMaximumSize(QSize(16777215, 45))
+        self.stopScrapingButton.setFont(font1)
 
-        self.horizontalLayout_3.addWidget(self.searchButton_2)
+        self.horizontalLayout_3.addWidget(self.stopScrapingButton)
 
 
         self.verticalLayout.addLayout(self.horizontalLayout_3)
@@ -95,6 +95,6 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Enter a query here", None))
         self.searchButton.setText(QCoreApplication.translate("MainWindow", u"Start scraping!", None))
-        self.searchButton_2.setText(QCoreApplication.translate("MainWindow", u"Stop scraping", None))
+        self.stopScrapingButton.setText(QCoreApplication.translate("MainWindow", u"Stop scraping", None))
     # retranslateUi
 
