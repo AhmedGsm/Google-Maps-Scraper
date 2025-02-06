@@ -28,10 +28,13 @@ class Site(Scrollable):
         self.manipulator = DriverManipulator("edge")
         super().__init__()
 
+    def stop_scraping(self):
+        self.is_stop_scraping = True
+
     def scrape_tab(self, places, drivermanipulator):
 
         # Set the end of recursive running condition
-        if self.__place_index == len(self.places):
+        if self.__place_index == len(self.places) or self.is_stop_scraping:
         #if self.place_index > NUMBER_ELEMENT_PER_SCROLL - 1:
             #drivermanipulator.driver.quit()
             self.__place_index = 0
