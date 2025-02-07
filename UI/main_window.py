@@ -17,15 +17,17 @@ class WindowApp(QMainWindow):
         self.ui.setupUi(self)
         self.ui.searchButton.clicked.connect(self.on_searchButton_clicked)
         self.ui.stopScrapingButton.clicked.connect(self.on_stopScrapingButton_clicked)
+        self.ui.searchEdit.textChanged.connect(self.on_searchEdit_changed)
+        self.ui.searchEdit.returnPressed.connect(self.on_searchEdit_returnPressed)
         # Disable Stop scraping button
+        self.ui.searchButton.setEnabled(False)
         self.ui.stopScrapingButton.setEnabled(False)
         # Insert a text inside a edit search
-        self.ui.searchEdit.setText("Plomberie à Reghaia")
+        #self.ui.searchEdit.setText("Plomberie à Reghaia")
         self.stopButtonText = self.ui.stopScrapingButton.text()
         self.startButtonText = self.ui.searchButton.text()
 
     def on_searchButton_clicked(self):
-        print("on_searchButton_clicked clicked")
         self.startScrapingThread = threading.Thread(target=self.startScraping)
         self.startScrapingThread.start()
         # Disable search button
@@ -34,7 +36,6 @@ class WindowApp(QMainWindow):
         self.ui.stopScrapingButton.setEnabled(True)
 
     def on_stopScrapingButton_clicked(self):
-        print("on_stopScrapingButton_clicked clicked")
         stopScrapingThread = threading.Thread(target=self.stopScraping)
         stopScrapingThread.start()
         self.ui.stopScrapingButton.setText("Stopping scraping...")
@@ -58,6 +59,18 @@ class WindowApp(QMainWindow):
         self.googlemapssite.stop_scraping()
         # Quit first and second drivers
         time.sleep(2)
+
+    def on_searchEdit_changed(self, newText):
+        self.ui.searchButton.setEnabled(False)
+        if newText:
+            self.ui.searchButton.setEnabled(True)
+
+
+    def on_searchEdit_returnPressed(self):
+        text = self.ui.searchEdit.text()
+        if self.ui.searchEdit.text():
+            self.on_searchButton_clicked()
+
 
 
 
