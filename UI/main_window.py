@@ -17,21 +17,29 @@ class WindowApp(QMainWindow):
         self.ui.setupUi(self)
         self.ui.searchButton.clicked.connect(self.on_searchButton_clicked)
         self.ui.stopScrapingButton.clicked.connect(self.on_stopScrapingButton_clicked)
+        # Disable Stop scraping button
+        self.ui.stopScrapingButton.setEnabled(False)
         # Insert a text inside a edit search
         self.ui.searchEdit.setText("Plomberie à Reghaia")
+        self.stopButtonText = self.ui.stopScrapingButton.text()
+        self.startButtonText = self.ui.searchButton.text()
 
     def on_searchButton_clicked(self):
         print("on_searchButton_clicked clicked")
-        startScrapingThread = threading.Thread(target=self.startScraping)
-        startScrapingThread.start()
-        #startScrapingThread.join()
+        self.startScrapingThread = threading.Thread(target=self.startScraping)
+        self.startScrapingThread.start()
+        # Disable search button
+        self.ui.searchButton.setText("Scraping...")
+        self.ui.searchButton.setEnabled(False)
+        self.ui.stopScrapingButton.setEnabled(True)
 
     def on_stopScrapingButton_clicked(self):
         print("on_stopScrapingButton_clicked clicked")
         stopScrapingThread = threading.Thread(target=self.stopScraping)
         stopScrapingThread.start()
-        stopScrapingThread.join()
-
+        self.ui.stopScrapingButton.setText("Stopping scraping...")
+        self.ui.stopScrapingButton.setEnabled(False)
+        self.ui.searchButton.setText(self.startButtonText)
 
     def startScraping(self):
         self.driver_manipulator = DriverManipulator()
@@ -40,6 +48,11 @@ class WindowApp(QMainWindow):
         self.driver_manipulator.quit_driver()
         # Quit the second driver(edge)
         self.googlemapssite.manipulator.quit_driver()
+        # Change buttons states and textes
+        self.ui.stopScrapingButton.setEnabled(False)
+        self.ui.searchButton.setEnabled(True)
+        self.ui.searchButton.setText(self.startButtonText)
+        self.ui.stopScrapingButton.setText(self.stopButtonText)
 
     def stopScraping(self):
         self.googlemapssite.stop_scraping()
