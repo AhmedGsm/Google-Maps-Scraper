@@ -35,6 +35,8 @@ class Site(Scrollable):
 
         # Set the end of recursive running condition
         if self.__place_index == len(self.places) or self.is_stop_scraping:
+            if self.is_stop_scraping:
+                print("Scraping is stopped by user!")
         #if self.place_index > NUMBER_ELEMENT_PER_SCROLL - 1:
             #drivermanipulator.driver.quit()
             self.__place_index = 0

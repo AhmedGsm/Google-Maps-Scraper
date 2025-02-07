@@ -8,5 +8,5 @@ googlemapssite = Site(driver_manipulator)
 query = "software companies in new france"
 googlemapssite.scrape_site(query)
 input("Enter any key to exit!")
-driver_manipulator.driver.quit()
+driver_manipulator.driver.quit_driver()
 

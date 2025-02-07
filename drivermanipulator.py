@@ -138,7 +138,7 @@ class DriverManipulator():
                 print("No internet connection. Retrying in 30 seconds...")
                 time.sleep(30)  # Wait for 30 seconds before retrying
 
-    def quit(self):
+    def quit_driver(self):
         """Closes the browser."""
-        self.quit()
+        self.driver.quit()
 

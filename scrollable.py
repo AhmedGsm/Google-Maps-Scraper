@@ -13,11 +13,13 @@ class Scrollable:
         self.is_element_found = False
         self.scrape_index = 0
         self.update_entries = True
+        self.is_stop_scraping = False
         pass
 
     def scroll_and_callback(self, driver, parent_selector, children_selector, load_time,
                             loop_callback, bulk_callback, end_message="", delete_element=True):
-        while True:
+        while True and not self.is_stop_scraping:
+            print(f"self.is_stop_scraping: {self.is_stop_scraping}")
             try:
                 # Try to retrieve the first liker div if exist(before it will deleted)
                 WebDriverWait(driver, TIME_5).until(

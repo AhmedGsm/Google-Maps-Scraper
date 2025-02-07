@@ -1,5 +1,6 @@
 import sys
 import threading
+import time
 
 from Ui_MainWindow import Ui_MainWindow
 from PySide6.QtWidgets import QApplication, QMainWindow
@@ -16,6 +17,8 @@ class WindowApp(QMainWindow):
         self.ui.setupUi(self)
         self.ui.searchButton.clicked.connect(self.on_searchButton_clicked)
         self.ui.stopScrapingButton.clicked.connect(self.on_stopScrapingButton_clicked)
+        # Insert a text inside a edit search
+        self.ui.searchEdit.setText("Plomberie à Reghaia")
 
     def on_searchButton_clicked(self):
         print("on_searchButton_clicked clicked")
@@ -34,15 +37,14 @@ class WindowApp(QMainWindow):
         self.driver_manipulator = DriverManipulator()
         self.googlemapssite = Site(self.driver_manipulator)
         self.googlemapssite.scrape_site(self.ui.searchEdit.text())
-        self.driver_manipulator.driver.quit()
+        self.driver_manipulator.quit_driver()
         # Quit the second driver(edge)
-        self.googlemapssite.manipulator.quit()
+        self.googlemapssite.manipulator.quit_driver()
 
     def stopScraping(self):
         self.googlemapssite.stop_scraping()
-        # Quit the second driver(edge)
-        self.googlemapssite.manipulator.quit()
-        self.driver_manipulator.driver.quit()
+        # Quit first and second drivers
+        time.sleep(2)
 
 
 
