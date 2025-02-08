@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>572</width>
+    <width>645</width>
     <height>559</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Place finder</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -21,7 +21,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>80</y>
+      <y>86</y>
       <width>120</width>
       <height>20</height>
      </rect>
@@ -39,9 +39,9 @@
     <property name="geometry">
      <rect>
       <x>9</x>
-      <y>107</y>
-      <width>291</width>
-      <height>41</height>
+      <y>108</y>
+      <width>311</width>
+      <height>40</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -66,9 +66,9 @@
    <widget class="QLabel" name="messagesLabel">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>20</y>
-      <width>221</width>
+      <x>360</x>
+      <y>30</y>
+      <width>271</width>
       <height>171</height>
      </rect>
     </property>
@@ -88,7 +88,7 @@
      <string notr="true">background-color: White</string>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
     </property>
     <property name="alignment">
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -99,7 +99,7 @@
      <rect>
       <x>10</x>
       <y>250</y>
-      <width>531</width>
+      <width>621</width>
       <height>271</height>
      </rect>
     </property>
@@ -120,12 +120,12 @@
     </column>
     <column>
      <property name="text">
-      <string>Website</string>
+      <string>Maps</string>
      </property>
     </column>
     <column>
      <property name="text">
-      <string>Maps</string>
+      <string>Website</string>
      </property>
     </column>
    </widget>
@@ -133,7 +133,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>230</y>
+      <y>228</y>
       <width>120</width>
       <height>20</height>
      </rect>
@@ -144,7 +144,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Enter a query here</string>
+     <string>Search list</string>
     </property>
    </widget>
    <widget class="QPushButton" name="searchButton">
@@ -174,13 +174,13 @@
      </font>
     </property>
     <property name="text">
-     <string>Start scraping!</string>
+     <string>Start searching</string>
     </property>
    </widget>
    <widget class="QPushButton" name="stopScrapingButton">
     <property name="geometry">
      <rect>
-      <x>158</x>
+      <x>180</x>
       <y>160</y>
       <width>141</width>
       <height>34</height>
@@ -204,7 +204,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Stop scraping</string>
+     <string>Stop searching</string>
     </property>
    </widget>
   </widget>
@@ -213,7 +213,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>572</width>
+     <width>645</width>
      <height>22</height>
     </rect>
    </property>

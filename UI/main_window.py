@@ -48,7 +48,7 @@ class WindowApp(QMainWindow):
 
     def startScraping(self):
         self.driver_manipulator = DriverManipulator()
-        self.googlemapssite = Site(self.driver_manipulator)
+        self.googlemapssite = Site(self.driver_manipulator, self.ui.tableWidget)
         self.googlemapssite.scrape_site(self.ui.searchEdit.text())
         self.driver_manipulator.quit_driver()
         # Quit the second driver(edge)

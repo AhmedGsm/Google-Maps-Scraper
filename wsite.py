@@ -2,6 +2,7 @@ import re
 import threading
 import time
 import mysql.connector
+from PySide6.QtGui import Qt
 
 from constants import *
 from drivermanipulator import DriverManipulator
@@ -10,11 +11,14 @@ from snovio_finder import SnovioFinder
 from model import Model
 from place import Place
 from scrollable import Scrollable
-
+from PySide6.QtWidgets import QTableWidgetItem
 
 class Site(Scrollable):
-    def __init__(self, driver_manipulator):
+    def __init__(self, driver_manipulator, table_widget):
         self.driver_manipulator = driver_manipulator
+        self.table_widget = table_widget
+        if self.table_widget:
+            self.table_widget.setRowCount(TABLE_WIDGET_SIZE)
         self.parent_scrollable = None
         self.__place_index = 0
         self.__total_places_index = 0
@@ -67,11 +71,15 @@ class Site(Scrollable):
         print("Place phone number: " + str(self.place_phone))
         # Assign the scraped values to a dictionary
         # To use it the UI
-        self.scraped_data_dict["url"] = self.place_url
-        self.scraped_data_dict["name"] = self.place_name
-        self.scraped_data_dict["address"] = self.place_address
-        self.scraped_data_dict["website"] = self.place_website
-        self.scraped_data_dict["phone"] = self.place_phone
+        self.scraped_data_dict = []
+        self.scraped_data_dict.append(self.place_name)
+        self.scraped_data_dict.append(self.place_address)
+        self.scraped_data_dict.append(self.place_phone)
+        self.scraped_data_dict.append(self.place_website)
+        self.scraped_data_dict.append(self.place_url)
+        # Update Table View
+        if self.table_widget:
+            self.update_table_widget()
         # Save scraped data in Product table
         sql_request = """INSERT INTO googlemaps.places (
         project_name,
@@ -127,10 +135,31 @@ class Site(Scrollable):
         # Increment place counter
         #self.places_counter += 1
         # Call the function recursively
+        self.__total_places_index += 1
         self.scrape_tab(places, drivermanipulator)
 
-    def get_scraped_data_dict(self):
-        return self.scraped_data_dict
+    def update_table_widget(self):
+        for col, value in enumerate(self.scraped_data_dict):
+            item = QTableWidgetItem(value)
+            item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)  # Make read-only
+            self.table_widget.setItem(self.__total_places_index, col, item)
+            print(f"__total_places_index: {self.__total_places_index}")
+
+    """def populate_table(self):
+        
+        data = [
+            ("1", "Alice", "25"),
+            ("2", "Bob", "30"),
+            ("3", "Charlie", "28")
+        ]
+
+        self.ui.tableWidget.setRowCount(len(data))  # Set row count
+
+        for row, (id_val, name, age) in enumerate(data):
+            for col, value in enumerate([id_val, name, age]):
+                item = QTableWidgetItem(value)
+                item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)  # Make read-only
+                self.ui.tableWidget.setItem(row, col, item)"""
 
     def save_email_details_in_database(self, contacts, values):
         # Loop through the contacts list and extract email details
@@ -257,7 +286,7 @@ class Site(Scrollable):
         return formatted_contacts
 
     def scrape_places_callback(self, *args):
-        self.__total_places_index += 1
+        #self.__total_places_index += 1
         print("Deleting place details container...")
         return
 
@@ -275,7 +304,7 @@ class Site(Scrollable):
 
             self.scrape_tab(self.places, self.manipulator)
         else:
-            time.sleep(TIME_8)
+            time.sleep(TIME_2)
 
         # Increment current counter
         #self.index += 1
