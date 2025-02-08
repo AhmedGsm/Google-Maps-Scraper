@@ -31,14 +31,18 @@ class WindowApp(QMainWindow):
         self.startScrapingThread = threading.Thread(target=self.startScraping)
         self.startScrapingThread.start()
         # Disable search button
-        self.ui.searchButton.setText("Scraping...")
+        ui_text = "Start scraping..."
+        self.ui.searchButton.setText(ui_text)
+        self.append_label_inline_text(self.ui.messagesLabel, ui_text)
         self.ui.searchButton.setEnabled(False)
         self.ui.stopScrapingButton.setEnabled(True)
 
     def on_stopScrapingButton_clicked(self):
         stopScrapingThread = threading.Thread(target=self.stopScraping)
         stopScrapingThread.start()
-        self.ui.stopScrapingButton.setText("Stopping scraping...")
+        ui_text = "Stopping scraping..."
+        self.ui.stopScrapingButton.setText(ui_text)
+        self.append_label_inline_text(self.ui.messagesLabel, ui_text)
         self.ui.stopScrapingButton.setEnabled(False)
         self.ui.searchButton.setText(self.startButtonText)
 
@@ -52,6 +56,7 @@ class WindowApp(QMainWindow):
         # Change buttons states and textes
         self.ui.stopScrapingButton.setEnabled(False)
         self.ui.searchButton.setEnabled(True)
+        self.append_label_inline_text(self.ui.messagesLabel, "Scraping is stopped")
         self.ui.searchButton.setText(self.startButtonText)
         self.ui.stopScrapingButton.setText(self.stopButtonText)
 
@@ -70,6 +75,14 @@ class WindowApp(QMainWindow):
         text = self.ui.searchEdit.text()
         if self.ui.searchEdit.text():
             self.on_searchButton_clicked()
+
+    def append_label_inline_text(self, qLabel, text):
+        # If the label is already have a text
+        # then append the text to the next line!
+        if qLabel.text():
+            qLabel.setText(f"{qLabel.text()}\n{text}")
+        else:
+            qLabel.setText(text)
 
 
 

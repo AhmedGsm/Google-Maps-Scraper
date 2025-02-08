@@ -17,26 +17,18 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QLineEdit,
     QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QSpacerItem, QVBoxLayout, QWidget)
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(572, 310)
+        MainWindow.resize(572, 553)
         MainWindow.setStyleSheet(u"")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalSpacer = QSpacerItem(20, 41, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.verticalSpacer)
-
-        self.verticalSpacer_3 = QSpacerItem(20, 42, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.verticalSpacer_3)
-
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
         font = QFont()
@@ -76,9 +68,18 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_3)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 41, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.messagesLabel = QLabel(self.centralwidget)
+        self.messagesLabel.setObjectName(u"messagesLabel")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.messagesLabel.sizePolicy().hasHeightForWidth())
+        self.messagesLabel.setSizePolicy(sizePolicy)
+        self.messagesLabel.setMinimumSize(QSize(0, 300))
+        self.messagesLabel.setStyleSheet(u"background-color: White")
+        self.messagesLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
 
-        self.verticalLayout.addItem(self.verticalSpacer_2)
+        self.verticalLayout.addWidget(self.messagesLabel)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -96,5 +97,6 @@ class Ui_MainWindow(object):
         self.label.setText(QCoreApplication.translate("MainWindow", u"Enter a query here", None))
         self.searchButton.setText(QCoreApplication.translate("MainWindow", u"Start scraping!", None))
         self.stopScrapingButton.setText(QCoreApplication.translate("MainWindow", u"Stop scraping", None))
+        self.messagesLabel.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
     # retranslateUi
 
