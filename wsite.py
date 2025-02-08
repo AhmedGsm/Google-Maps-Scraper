@@ -26,6 +26,7 @@ class Site(Scrollable):
         self.hunter_finder = Finder(HUNTER_API_KEYS_LIST, endpoint)
         self.snov_finder = SnovioFinder(SNOV_API_KEYS_LIST)
         self.manipulator = DriverManipulator("edge")
+        self.scraped_data_dict = {}
         super().__init__()
 
     def stop_scraping(self):
@@ -64,7 +65,13 @@ class Site(Scrollable):
         print("Place address: " + str(self.place_address))
         print("Place website: " + str(self.place_website))
         print("Place phone number: " + str(self.place_phone))
-
+        # Assign the scraped values to a dictionary
+        # To use it the UI
+        self.scraped_data_dict["url"] = self.place_url
+        self.scraped_data_dict["name"] = self.place_name
+        self.scraped_data_dict["address"] = self.place_address
+        self.scraped_data_dict["website"] = self.place_website
+        self.scraped_data_dict["phone"] = self.place_phone
         # Save scraped data in Product table
         sql_request = """INSERT INTO googlemaps.places (
         project_name,
@@ -121,6 +128,9 @@ class Site(Scrollable):
         #self.places_counter += 1
         # Call the function recursively
         self.scrape_tab(places, drivermanipulator)
+
+    def get_scraped_data_dict(self):
+        return self.scraped_data_dict
 
     def save_email_details_in_database(self, contacts, values):
         # Loop through the contacts list and extract email details
