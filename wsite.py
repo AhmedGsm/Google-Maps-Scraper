@@ -141,7 +141,7 @@ class Site(Scrollable):
     def update_table_widget(self):
         for col, value in enumerate(self.scraped_data_dict):
             item = QTableWidgetItem(value)
-            item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)  # Make read-only
+            #item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)  # Make read-only
             self.table_widget.setItem(self.__total_places_index, col, item)
             print(f"__total_places_index: {self.__total_places_index}")
 
