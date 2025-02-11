@@ -225,7 +225,14 @@
     <addaction name="actionFrench"/>
     <addaction name="actionArabic"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuLanguages"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="actionEnglish">
    <property name="text">
@@ -240,6 +247,11 @@
   <action name="actionArabic">
    <property name="text">
     <string>العربية</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

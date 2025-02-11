@@ -1,8 +1,10 @@
 import sys
 import threading
 import time
+
+from UI.dialog_about import dialog_about
 from Ui_MainWindow import Ui_MainWindow
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PySide6.QtCore import QTranslator, QLocale, QCoreApplication
 from drivermanipulator import DriverManipulator
 from wsite import Site
@@ -24,6 +26,7 @@ class WindowApp(QMainWindow):
         self.ui.actionEnglish.triggered.connect(lambda: self.change_language("en"))
         self.ui.actionFrench.triggered.connect(lambda: self.change_language("fr"))
         self.ui.actionArabic.triggered.connect(lambda: self.change_language("ar"))        # Disable Stop scraping button
+        self.ui.actionAbout.triggered.connect(lambda: self.display_help_dialog())
         self.ui.searchButton.setEnabled(False)
         self.ui.stopScrapingButton.setEnabled(False)
         # Insert a text inside a edit search
@@ -108,6 +111,10 @@ class WindowApp(QMainWindow):
                 QApplication.instance().installTranslator(self.translator)
                 print(f"Language changed to {lang_code}")
         self.ui.retranslateUi(self)
+
+    def display_help_dialog(self):
+        dialog = dialog_about()
+        dialog.exec()
 
 # Run Application
 app = QApplication(sys.argv)

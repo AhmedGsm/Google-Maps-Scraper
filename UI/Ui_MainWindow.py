@@ -32,6 +32,8 @@ class Ui_MainWindow(object):
         self.actionFrench.setObjectName(u"actionFrench")
         self.actionArabic = QAction(MainWindow)
         self.actionArabic.setObjectName(u"actionArabic")
+        self.actionAbout = QAction(MainWindow)
+        self.actionAbout.setObjectName(u"actionAbout")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.label = QLabel(self.centralwidget)
@@ -96,12 +98,16 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QRect(0, 0, 645, 22))
         self.menuLanguages = QMenu(self.menubar)
         self.menuLanguages.setObjectName(u"menuLanguages")
+        self.menuHelp = QMenu(self.menubar)
+        self.menuHelp.setObjectName(u"menuHelp")
         MainWindow.setMenuBar(self.menubar)
 
         self.menubar.addAction(self.menuLanguages.menuAction())
+        self.menubar.addAction(self.menuHelp.menuAction())
         self.menuLanguages.addAction(self.actionEnglish)
         self.menuLanguages.addAction(self.actionFrench)
         self.menuLanguages.addAction(self.actionArabic)
+        self.menuHelp.addAction(self.actionAbout)
 
         self.retranslateUi(MainWindow)
 
@@ -113,6 +119,7 @@ class Ui_MainWindow(object):
         self.actionEnglish.setText(QCoreApplication.translate("MainWindow", u"English", None))
         self.actionFrench.setText(QCoreApplication.translate("MainWindow", u"Fran\u00e7ais", None))
         self.actionArabic.setText(QCoreApplication.translate("MainWindow", u"\u0627\u0644\u0639\u0631\u0628\u064a\u0629", None))
+        self.actionAbout.setText(QCoreApplication.translate("MainWindow", u"About", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Enter a query here", None))
         self.messagesLabel.setText("")
         ___qtablewidgetitem = self.tableWidget.horizontalHeaderItem(0)
@@ -129,5 +136,6 @@ class Ui_MainWindow(object):
         self.searchButton.setText(QCoreApplication.translate("MainWindow", u"Start searching", None))
         self.stopScrapingButton.setText(QCoreApplication.translate("MainWindow", u"Stop searching", None))
         self.menuLanguages.setTitle(QCoreApplication.translate("MainWindow", u"Languages", None))
+        self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
     # retranslateUi
 
