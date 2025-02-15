@@ -27,6 +27,10 @@ class WindowApp(QMainWindow):
         self.ui.actionFrench.triggered.connect(lambda: self.change_language("fr"))
         self.ui.actionArabic.triggered.connect(lambda: self.change_language("ar"))        # Disable Stop scraping button
         self.ui.actionAbout.triggered.connect(lambda: self.display_help_dialog())
+        self.ui.searchMenuButton.clicked.connect(self.dislpay_search_page)
+        self.ui.readButton.clicked.connect(self.dislpay_read_page)
+        self.ui.settingsButton.clicked.connect(self.dislpay_settings_page)
+        self.ui.saveListButton.clicked.connect(self.save_list)
         self.ui.searchButton.setEnabled(False)
         self.ui.stopScrapingButton.setEnabled(False)
         # Insert a text inside a edit search
@@ -115,6 +119,18 @@ class WindowApp(QMainWindow):
     def display_help_dialog(self):
         dialog = dialog_about()
         dialog.exec()
+
+    def dislpay_search_page(self):
+        self.ui.stackedWidget.setCurrentIndex(0)
+
+    def dislpay_read_page(self):
+        self.ui.stackedWidget.setCurrentIndex(1)
+
+    def dislpay_settings_page(self):
+        self.ui.stackedWidget.setCurrentIndex(2)
+
+    def save_list(self):
+        print("save_list button clicked...")
 
 # Run Application
 app = QApplication(sys.argv)
