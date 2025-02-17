@@ -1,8 +1,9 @@
+import csv
 import re
 import threading
 import time
 import mysql.connector
-from PySide6.QtGui import Qt
+from PySide6.QtWidgets import QFileDialog, QMessageBox
 
 from constants import *
 from drivermanipulator import DriverManipulator
@@ -11,14 +12,11 @@ from snovio_finder import SnovioFinder
 from model import Model
 from place import Place
 from scrollable import Scrollable
-from PySide6.QtWidgets import QTableWidgetItem
 
 class Site(Scrollable):
-    def __init__(self, driver_manipulator, table_widget):
+    def __init__(self, driver_manipulator, main_window):
         self.driver_manipulator = driver_manipulator
-        self.table_widget = table_widget
-        if self.table_widget:
-            self.table_widget.setRowCount(TABLE_WIDGET_SIZE)
+        self.main_window = main_window
         self.parent_scrollable = None
         self.__place_index = 0
         self.__total_places_index = 0
@@ -30,7 +28,6 @@ class Site(Scrollable):
         self.hunter_finder = Finder(HUNTER_API_KEYS_LIST, endpoint)
         self.snov_finder = SnovioFinder(SNOV_API_KEYS_LIST)
         self.manipulator = DriverManipulator("edge")
-        self.scraped_data_dict = {}
         super().__init__()
 
     def stop_scraping(self):
@@ -78,8 +75,7 @@ class Site(Scrollable):
         self.scraped_data_dict.append(self.place_website)
         self.scraped_data_dict.append(self.place_url)
         # Update Table View
-        if self.table_widget:
-            self.update_table_widget()
+        self.main_window.update_table_widget()
         # Save scraped data in Product table
         sql_request = """INSERT INTO googlemaps.places (
         project_name,
@@ -138,28 +134,12 @@ class Site(Scrollable):
         self.__total_places_index += 1
         self.scrape_tab(places, drivermanipulator)
 
-    def update_table_widget(self):
-        for col, value in enumerate(self.scraped_data_dict):
-            item = QTableWidgetItem(value)
-            #item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)  # Make read-only
-            self.table_widget.setItem(self.__total_places_index, col, item)
-            print(f"__total_places_index: {self.__total_places_index}")
+    def pass_data_to_UI(self):
+        return {
+            "scraped_data": self.scraped_data_dict,
+        }
 
-    """def populate_table(self):
-        
-        data = [
-            ("1", "Alice", "25"),
-            ("2", "Bob", "30"),
-            ("3", "Charlie", "28")
-        ]
 
-        self.ui.tableWidget.setRowCount(len(data))  # Set row count
-
-        for row, (id_val, name, age) in enumerate(data):
-            for col, value in enumerate([id_val, name, age]):
-                item = QTableWidgetItem(value)
-                item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)  # Make read-only
-                self.ui.tableWidget.setItem(row, col, item)"""
 
     def save_email_details_in_database(self, contacts, values):
         # Loop through the contacts list and extract email details

@@ -1,13 +1,16 @@
+import csv
 import sys
 import threading
 import time
 
 from UI.dialog_about import dialog_about
 from Ui_MainWindow import Ui_MainWindow
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
 from PySide6.QtCore import QTranslator, QLocale, QCoreApplication
 from drivermanipulator import DriverManipulator
 from wsite import Site
+from PySide6.QtWidgets import QTableWidgetItem
+from constants import *
 
 class WindowApp(QMainWindow):
     def __init__(self):
@@ -15,6 +18,9 @@ class WindowApp(QMainWindow):
         self.driver_manipulator = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.table_widget = self.ui.tableWidget
+        if self.table_widget:
+            self.table_widget.setRowCount(TABLE_WIDGET_SIZE)
         self.ui.searchButton.clicked.connect(self.on_searchButton_clicked)
         self.ui.stopScrapingButton.clicked.connect(self.on_stopScrapingButton_clicked)
         self.ui.searchEdit.textChanged.connect(self.on_searchEdit_changed)
@@ -30,7 +36,7 @@ class WindowApp(QMainWindow):
         self.ui.searchMenuButton.clicked.connect(self.dislpay_search_page)
         self.ui.readButton.clicked.connect(self.dislpay_read_page)
         self.ui.settingsButton.clicked.connect(self.dislpay_settings_page)
-        self.ui.saveListButton.clicked.connect(self.save_list)
+        self.ui.saveListButton.clicked.connect(lambda: self.save_list())
         self.ui.searchButton.setEnabled(False)
         self.ui.stopScrapingButton.setEnabled(False)
         # Insert a text inside a edit search
@@ -39,6 +45,9 @@ class WindowApp(QMainWindow):
         self.startButtonText = self.ui.searchButton.text()
 
         self.translate_UI()
+        # Declare variables
+        self.data_buffer = [["Name", "Address", "Phone", "Website", "Maps"]]
+        self.__total_places = 0
 
     def translate_UI(self):
         # Load translation
@@ -69,7 +78,7 @@ class WindowApp(QMainWindow):
 
     def startScraping(self):
         self.driver_manipulator = DriverManipulator()
-        self.googlemapssite = Site(self.driver_manipulator, self.ui.tableWidget)
+        self.googlemapssite = Site(self.driver_manipulator, self)
         self.googlemapssite.scrape_site(self.ui.searchEdit.text())
         self.driver_manipulator.quit_driver()
         # Quit the second driver(edge)
@@ -129,8 +138,40 @@ class WindowApp(QMainWindow):
     def dislpay_settings_page(self):
         self.ui.stackedWidget.setCurrentIndex(2)
 
+
+    def update_table_widget(self):
+        # Get data from scraping logic
+        data = self.googlemapssite.pass_data_to_UI()
+        scraped_data = data["scraped_data"]
+        for col, value in enumerate(scraped_data):
+            item = QTableWidgetItem(value)
+            self.table_widget.setItem(self.__total_places, col, item)
+        self.__total_places += 1
+        print(f"total_places: {self.__total_places}")
+        # Enable save list button
+        self.ui.saveListButton.setEnabled(True)
+
+        self.data_buffer.append(scraped_data)
+
     def save_list(self):
-        print("save_list button clicked...")
+        # Open a file save dialog
+        file_path, filter = QFileDialog.getSaveFileName(
+            self,  # Parent window
+            "Save List File",  # Dialog title
+            "",  # Default directory (empty for current directory)
+            "CSV Files (*.csv);;Text Files (*.txt)All Files (*)"  # File filters
+        )
+        # Save the buffer content to a CSV file
+
+        if file_path:
+            try:
+                with open(file_path, mode="w", newline="", encoding="utf-8") as file:
+                    writer = csv.writer(file)
+                    writer.writerows(self.data_buffer)
+                    QMessageBox.information(self, self.tr("Success"), self.tr("File saved successfully!"))
+
+            except Exception as e:
+                QMessageBox.critical(self, self.tr("Error"), self.tr(f"Failed to save file: {str(e)})"))
 
 # Run Application
 app = QApplication(sys.argv)
