@@ -267,6 +267,7 @@ class Ui_MainWindow(object):
 
         self.saveListButton = QPushButton(self.mainContent)
         self.saveListButton.setObjectName(u"saveListButton")
+        self.saveListButton.setEnabled(False)
         self.saveListButton.setGeometry(QRect(630, 479, 40, 40))
         icon = QIcon()
         icon.addFile(u":/icons/C:/Users/ahmed/Downloads/feather icons/save.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
@@ -340,9 +341,9 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem2 = self.tableWidget.horizontalHeaderItem(2)
         ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Telephone", None));
         ___qtablewidgetitem3 = self.tableWidget.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Maps", None));
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Website", None));
         ___qtablewidgetitem4 = self.tableWidget.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Website", None));
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Maps", None));
         self.listLabel.setText(QCoreApplication.translate("MainWindow", u"Search list", None))
         self.messagesLabel.setText("")
         self.listNameLabel.setText(QCoreApplication.translate("MainWindow", u"List name", None))

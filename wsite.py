@@ -307,7 +307,7 @@ class Site(Scrollable):
 
     def scrape_site(self, query):
         url = BASIC_URL + query
-        PROJECT_CONFIG["name"] = re.sub(" ", "_", query)
+        #PROJECT_CONFIG["name"] = re.sub(" ", "_", query)
         self.driver_manipulator.land_page_url(url)
         #self.parent_scrollable = self.driver_manipulator.driver.find_element(By.CSS_SELECTOR, PARENT_SCROLLABLE_SELECTOR)
         # places = self.driver.find_elements(By.CSS_SELECTOR, PLACE_CONTAINER_SELECTOR)

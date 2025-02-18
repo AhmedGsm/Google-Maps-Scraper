@@ -1,4 +1,5 @@
 import csv
+import os
 import sys
 import threading
 import time
@@ -24,6 +25,7 @@ class WindowApp(QMainWindow):
         self.ui.searchButton.clicked.connect(self.on_searchButton_clicked)
         self.ui.stopScrapingButton.clicked.connect(self.on_stopScrapingButton_clicked)
         self.ui.searchEdit.textChanged.connect(self.on_searchEdit_changed)
+        self.ui.listNameEdit.textChanged.connect(self.on_listNameEdit_changed)
         self.ui.searchEdit.returnPressed.connect(self.on_searchEdit_returnPressed)
         # Menu Actions
         self.translator = QTranslator()
@@ -43,7 +45,9 @@ class WindowApp(QMainWindow):
         #self.ui.searchEdit.setText("Plomberie à Reghaia")
         self.stopButtonText = self.ui.stopScrapingButton.text()
         self.startButtonText = self.ui.searchButton.text()
-
+        self.listNameEditChanged = False
+        self.searchEditChanged = False
+        self.is_start_searching = False
         self.translate_UI()
         # Declare variables
         self.data_buffer = [["Name", "Address", "Phone", "Website", "Maps"]]
@@ -77,6 +81,12 @@ class WindowApp(QMainWindow):
         self.ui.searchButton.setText(self.startButtonText)
 
     def startScraping(self):
+        # Clear and disable buttons and widgets states
+        self.is_start_searching = True
+        self.table_widget.clearContents()
+        self.ui.saveListButton.setEnabled(False)
+        self.ui.searchEdit.setEnabled(False)
+        self.ui.listNameEdit.setEnabled(False)
         self.driver_manipulator = DriverManipulator()
         self.googlemapssite = Site(self.driver_manipulator, self)
         self.googlemapssite.scrape_site(self.ui.searchEdit.text())
@@ -90,6 +100,10 @@ class WindowApp(QMainWindow):
                                       QCoreApplication.translate("MainWindow", u"Searching is stopped", None))
         self.ui.searchButton.setText(self.startButtonText)
         self.ui.stopScrapingButton.setText(self.stopButtonText)
+        self.ui.searchEdit.setEnabled(True)
+        self.ui.listNameEdit.setEnabled(True)
+        self.is_start_searching = False
+        self.__total_places = 0
 
     def stopScraping(self):
         self.googlemapssite.stop_scraping()
@@ -97,9 +111,26 @@ class WindowApp(QMainWindow):
         time.sleep(2)
 
     def on_searchEdit_changed(self, newText):
-        self.ui.searchButton.setEnabled(False)
-        if newText:
+        if not newText:
+            self.searchEditChanged = False
+            self.ui.searchButton.setEnabled(False)
+            return
+        self.searchEditChanged = True
+        if self.listNameEditChanged and newText and not self.is_start_searching:
             self.ui.searchButton.setEnabled(True)
+
+    def on_listNameEdit_changed(self, newText):
+        if not newText:
+            self.listNameEditChanged = False
+            self.ui.searchButton.setEnabled(False)
+            return
+        self.listNameEditChanged = True
+        if self.searchEditChanged and not self.is_start_searching:
+            self.ui.searchButton.setEnabled(True)
+            # Set the project name
+        PROJECT_CONFIG["name"] = self.ui.listNameEdit.text()
+        print("PROJECT_CONFIG[name]" + PROJECT_CONFIG["name"])
+
 
     def on_searchEdit_returnPressed(self):
         if self.ui.searchEdit.text():
@@ -142,23 +173,39 @@ class WindowApp(QMainWindow):
     def update_table_widget(self):
         # Get data from scraping logic
         data = self.googlemapssite.pass_data_to_UI()
-        scraped_data = data["scraped_data"]
-        for col, value in enumerate(scraped_data):
+        self.scraped_data = data["scraped_data"]
+        for col, value in enumerate(self.scraped_data):
             item = QTableWidgetItem(value)
             self.table_widget.setItem(self.__total_places, col, item)
         self.__total_places += 1
         print(f"total_places: {self.__total_places}")
         # Enable save list button
         self.ui.saveListButton.setEnabled(True)
+        # Append data to buffer
+        self.data_buffer.append(self.scraped_data)
 
-        self.data_buffer.append(scraped_data)
+    """def clear_table_widget(self):
+        for i in range(self.__total_places):
+            for col, value in enumerate(self.scraped_data):
+                self.table_widget.setItem(self.__total_places, col, None)"""
+
+    def get_download_directory(self):
+        # Get the user's profile directory
+        user_profile = os.getenv('USERPROFILE')
+
+        if user_profile:
+            # Construct the path to the Downloads directory
+            download_directory = os.path.join(user_profile, 'Downloads')
+            return download_directory
+        else:
+            raise EnvironmentError("Unable to determine the user's profile directory.")
 
     def save_list(self):
         # Open a file save dialog
         file_path, filter = QFileDialog.getSaveFileName(
             self,  # Parent window
             "Save List File",  # Dialog title
-            "",  # Default directory (empty for current directory)
+            "/".join((self.get_download_directory(), self.ui.searchEdit.text())),  # Default directory (empty for current directory)
             "CSV Files (*.csv);;Text Files (*.txt)All Files (*)"  # File filters
         )
         # Save the buffer content to a CSV file

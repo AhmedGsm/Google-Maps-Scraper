@@ -232,12 +232,12 @@ background-color: #EE96B0;
            </column>
            <column>
             <property name="text">
-             <string>Maps</string>
+             <string>Website</string>
             </property>
            </column>
            <column>
             <property name="text">
-             <string>Website</string>
+             <string>Maps</string>
             </property>
            </column>
           </widget>
@@ -465,6 +465,9 @@ background-color: #EE96B0;
            </layout>
           </widget>
           <widget class="QPushButton" name="saveListButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>630</x>
