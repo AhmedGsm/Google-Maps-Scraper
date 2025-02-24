@@ -24,6 +24,7 @@ class Site(Scrollable):
         self.find_email = False
         # No not assign this value, because it will update from the callback function in scrollable.py
         self.update_entries = None
+        self.apply_trial = True
         # Instantiate finder class
         self.hunter_finder = Finder(HUNTER_API_KEYS_LIST, endpoint)
         self.snov_finder = SnovioFinder(SNOV_API_KEYS_LIST)
@@ -132,14 +133,38 @@ class Site(Scrollable):
         #self.places_counter += 1
         # Call the function recursively
         self.__total_places_index += 1
+        print("__total_places_index" + str(self.__total_places_index))
+        if self.__total_places_index >= FREE_TRIAL_MAX_REQUESTS and self.apply_trial:
+            print("You have only 5 results for free trial")
+            self.stop_scraping()
+            #threading.Thread(target=self.show_license_massage_box).start()
+
         self.scrape_tab(places, drivermanipulator)
+
+    def show_license_massage_box(self):
+        # Create a QMessageBox object
+        msg_box = QMessageBox()
+
+        # Set the title and text of the message box
+        msg_box.setWindowTitle("Free Trial")
+        msg_box.setText(f"You have only {FREE_TRIAL_MAX_REQUESTS} results for free trial. Please buy more credits to get more requests!")
+
+        # Add buttons to the message box
+        msg_box.setStandardButtons(QMessageBox.Ok)
+
+        # Show the message box and get the user's response
+        response = msg_box.exec()
+
+        # Check which button was clicked
+        if response == QMessageBox.Ok:
+            print("OK button clicked")
+        elif response == QMessageBox.Cancel:
+            print("Cancel button clicked")
 
     def pass_data_to_UI(self):
         return {
             "scraped_data": self.scraped_data_dict,
         }
-
-
 
     def save_email_details_in_database(self, contacts, values):
         # Loop through the contacts list and extract email details
