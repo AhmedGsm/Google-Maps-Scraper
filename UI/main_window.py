@@ -1,5 +1,6 @@
 import csv
 import os
+import subprocess
 import sys
 import threading
 import time
@@ -9,9 +10,12 @@ from Ui_MainWindow import Ui_MainWindow
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
 from PySide6.QtCore import QTranslator, QLocale, QCoreApplication
 from drivermanipulator import DriverManipulator
+from model import Model
 from wsite import Site
 from PySide6.QtWidgets import QTableWidgetItem
 from constants import *
+from register_API import Register
+import uuid
 
 class WindowApp(QMainWindow):
     def __init__(self):
@@ -27,6 +31,10 @@ class WindowApp(QMainWindow):
         self.ui.searchEdit.textChanged.connect(self.on_searchEdit_changed)
         self.ui.listNameEdit.textChanged.connect(self.on_listNameEdit_changed)
         self.ui.searchEdit.returnPressed.connect(self.on_searchEdit_returnPressed)
+        self.ui.nameEdit.textChanged.connect(self.on_nameEdit_changed)
+        self.ui.emailEdit.textChanged.connect(self.on_emailEdit_changed)
+        self.ui.phoneEdit.textChanged.connect(self.on_phoneEdit_changed)
+
         # Menu Actions
         self.translator = QTranslator()
 
@@ -36,9 +44,10 @@ class WindowApp(QMainWindow):
         self.ui.actionArabic.triggered.connect(lambda: self.change_language("ar"))        # Disable Stop scraping button
         self.ui.actionAbout.triggered.connect(lambda: self.display_help_dialog())
         self.ui.searchMenuButton.clicked.connect(self.dislpay_search_page)
-        self.ui.readButton.clicked.connect(self.dislpay_read_page)
+        self.ui.registerMenuButton.clicked.connect(self.dislpay_read_page)
         self.ui.settingsButton.clicked.connect(self.dislpay_settings_page)
         self.ui.saveListButton.clicked.connect(lambda: self.save_list())
+        self.ui.registerButton.clicked.connect(self.register_user)
         self.ui.searchButton.setEnabled(False)
         self.ui.stopScrapingButton.setEnabled(False)
         # Insert a text inside a edit search
@@ -48,7 +57,11 @@ class WindowApp(QMainWindow):
         self.listNameEditChanged = False
         self.searchEditChanged = False
         self.is_start_searching = False
+        self.is_name_valid = False
+        self.is_phone_valid = False
+        self.is_email_valid = False
         self.translate_UI()
+        self.handle_register_form_states()
         # Declare variables
         self.data_buffer = [["Name", "Address", "Phone", "Website", "Maps"]]
         self.__total_places = 0
@@ -136,6 +149,44 @@ class WindowApp(QMainWindow):
         if self.ui.searchEdit.text():
             self.on_searchButton_clicked()
 
+    def on_nameEdit_changed(self, text):
+        """Validate name (allows letters, spaces, hyphens, and apostrophes)"""
+        name_pattern = r'^[a-zA-ZÀ-ÿ\s\'-]{2,50}$'  # Allows international characters
+        if re.match(name_pattern, text.strip()) is None:
+            self.ui.nameMessageLabel.setText("Name is invalid")
+            self.is_name_valid = False
+        else:
+            self.ui.nameMessageLabel.setText("")
+            self.is_name_valid = True
+        self.change_submit_button_state()
+
+    def on_emailEdit_changed(self, text):
+        """Validate email format using RFC 5322 standard"""
+        email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        if re.match(email_pattern, text.strip()) is None:
+            self.ui.emailMessageLabel.setText("Email is invalid")
+            self.is_email_valid = False
+        else:
+            self.ui.emailMessageLabel.setText("")
+            self.is_email_valid = True
+        self.change_submit_button_state()
+
+    def on_phoneEdit_changed(self, text):
+        """Validate international phone numbers (basic format check)"""
+        phone_pattern = r'^\+?[0-9\s\-\(\)]{7,20}$'  # Basic international format
+        if re.match(phone_pattern, text.strip()) is None:
+            self.ui.phoneMessageLabel.setText("The phone format is invalid, should contains only numbers")
+            self.is_phone_valid = False
+        else:
+            self.ui.phoneMessageLabel.setText("")
+            self.is_phone_valid = True
+        self.change_submit_button_state()
+
+    def change_submit_button_state(self):
+        self.ui.registerButton.setEnabled(False)
+        if self.is_phone_valid and self.is_email_valid and self.is_name_valid:
+            self.ui.registerButton.setEnabled(True)
+
     def append_label_inline_text(self, qLabel, text):
         # If the label is already have a text
         # then append the text to the next line!
@@ -169,6 +220,56 @@ class WindowApp(QMainWindow):
     def dislpay_settings_page(self):
         self.ui.stackedWidget.setCurrentIndex(2)
 
+    def get_mac_address(self):
+        # Get the MAC address of the machine
+        mac = uuid.getnode()
+        return ':'.join(("%012X" % mac)[i:i + 2] for i in range(0, 12, 2))
+
+    def register_user(self):
+        # Disable register button
+        self.ui.registerButton.setEnabled(False)
+        # Create register object and request the API endpoint
+        name = self.ui.nameEdit.text()
+        email = self.ui.emailEdit.text()
+        phone = self.ui.phoneEdit.text()
+        register = Register(
+            name=name,
+            email=email,
+            phone=phone,
+            mac_address=self.get_mac_address(),
+        )
+        result = register.request_Api()
+        if result == True:
+            self.ui.registerMessageLabel.setText("Registration successful! You can now visit the \nSearch page to explore and find your preferred businesses.")
+        else:
+            self.ui.registerMessageLabel.setText(result)
+
+        # Disable all the fields after registering
+        self.ui.nameEdit.setEnabled(False)
+        self.ui.emailEdit.setEnabled(False)
+        self.ui.phoneEdit.setEnabled(False)
+        self.ui.searchPage.setEnabled(True)
+
+        # Add the registered user to the local
+        # users table
+        sql_request ="""INSERT INTO googlemaps.localusers(name, email, phone) VALUES(%s, %s, %s)"""
+        values = (name, email, phone)
+        Model.insert_into_database(sql_request, values)
+
+    def handle_register_form_states(self):
+        # Check if the local user table is empty
+        data = Model.read_from_database("SELECT COUNT(*) FROM googlemaps.localusers")
+        table_entries_count = data[0][0]
+        # If the table is empty(user is not registered yet) so enable all register fields and buttond
+        if table_entries_count == 0:
+            # Enable all the fields after registering
+            self.ui.registerPage.setEnabled(True)
+            self.ui.searchPage.setEnabled(False)
+        else:
+            self.ui.registerPage.setEnabled(False)
+            self.ui.searchPage.setEnabled(True)
+
+            self.ui.registerMessageLabel.setText("You have already registered")
 
     def update_table_widget(self):
         # Get data from scraping logic

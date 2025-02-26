@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1024, 598)
+        MainWindow.resize(1024, 599)
         MainWindow.setStyleSheet(u"#centralwidget{\n"
 "background-color: white;\n"
 "}")
@@ -43,6 +43,10 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"QLineEdit {\n"
 "color: red;\n"
+"}\n"
+"\n"
+"#registerMessageLabel {\n"
+"	color: #32BA12;\n"
 "}")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -112,14 +116,14 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.searchMenuButton)
 
-        self.readButton = QPushButton(self.menu)
-        self.readButton.setObjectName(u"readButton")
-        self.readButton.setMinimumSize(QSize(0, 35))
-        self.readButton.setFont(font1)
-        self.readButton.setCheckable(True)
-        self.readButton.setAutoExclusive(True)
+        self.registerMenuButton = QPushButton(self.menu)
+        self.registerMenuButton.setObjectName(u"registerMenuButton")
+        self.registerMenuButton.setMinimumSize(QSize(0, 35))
+        self.registerMenuButton.setFont(font1)
+        self.registerMenuButton.setCheckable(True)
+        self.registerMenuButton.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.readButton)
+        self.verticalLayout_2.addWidget(self.registerMenuButton)
 
         self.settingsButton = QPushButton(self.menu)
         self.settingsButton.setObjectName(u"settingsButton")
@@ -139,14 +143,11 @@ class Ui_MainWindow(object):
         self.stackedWidget = QStackedWidget(self.centralwidget)
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.stackedWidget.setStyleSheet(u"\n"
-"	background-color: white;")
-        self.searchPage = QWidget()
-        self.searchPage.setObjectName(u"searchPage")
-        self.gridLayout = QGridLayout(self.searchPage)
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.mainContent = QWidget(self.searchPage)
-        self.mainContent.setObjectName(u"mainContent")
-        self.mainContent.setStyleSheet(u"QPushButton {\n"
+"QWidget {\n"
+"	background-color: white;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
 "border: none;\n"
 "background-color: #E66189;\n"
 "}\n"
@@ -154,6 +155,13 @@ class Ui_MainWindow(object):
 "QPushButton: hover {\n"
 "background-color: #EE96B0;\n"
 "}")
+        self.searchPage = QWidget()
+        self.searchPage.setObjectName(u"searchPage")
+        self.gridLayout = QGridLayout(self.searchPage)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.mainContent = QWidget(self.searchPage)
+        self.mainContent.setObjectName(u"mainContent")
+        self.mainContent.setStyleSheet(u"")
         self.tableWidget = QTableWidget(self.mainContent)
         if (self.tableWidget.columnCount() < 5):
             self.tableWidget.setColumnCount(5)
@@ -277,25 +285,121 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.mainContent, 0, 0, 1, 1)
 
         self.stackedWidget.addWidget(self.searchPage)
-        self.readPage = QWidget()
-        self.readPage.setObjectName(u"readPage")
-        self.gridLayout_2 = QGridLayout(self.readPage)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.label_3 = QLabel(self.readPage)
-        self.label_3.setObjectName(u"label_3")
+        self.registerPage = QWidget()
+        self.registerPage.setObjectName(u"registerPage")
+        self.registerHeaderLabel = QLabel(self.registerPage)
+        self.registerHeaderLabel.setObjectName(u"registerHeaderLabel")
+        self.registerHeaderLabel.setGeometry(QRect(140, 90, 441, 36))
         font5 = QFont()
-        font5.setPointSize(40)
-        self.label_3.setFont(font5)
+        font5.setPointSize(20)
+        self.registerHeaderLabel.setFont(font5)
+        self.layoutWidget_2 = QWidget(self.registerPage)
+        self.layoutWidget_2.setObjectName(u"layoutWidget_2")
+        self.layoutWidget_2.setGeometry(QRect(141, 181, 411, 42))
+        self.inputContainer = QHBoxLayout(self.layoutWidget_2)
+        self.inputContainer.setObjectName(u"inputContainer")
+        self.inputContainer.setContentsMargins(0, 0, 0, 0)
+        self.listNameLabel_2 = QLabel(self.layoutWidget_2)
+        self.listNameLabel_2.setObjectName(u"listNameLabel_2")
+        self.listNameLabel_2.setFont(font2)
 
-        self.gridLayout_2.addWidget(self.label_3, 0, 0, 1, 1)
+        self.inputContainer.addWidget(self.listNameLabel_2)
 
-        self.stackedWidget.addWidget(self.readPage)
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.inputContainer.addItem(self.horizontalSpacer_3)
+
+        self.nameEdit = QLineEdit(self.layoutWidget_2)
+        self.nameEdit.setObjectName(u"nameEdit")
+        self.nameEdit.setMinimumSize(QSize(300, 40))
+        self.nameEdit.setMaximumSize(QSize(16777215, 16777215))
+        self.nameEdit.setSizeIncrement(QSize(0, 34))
+        self.nameEdit.setFont(font3)
+
+        self.inputContainer.addWidget(self.nameEdit)
+
+        self.layoutWidget_3 = QWidget(self.registerPage)
+        self.layoutWidget_3.setObjectName(u"layoutWidget_3")
+        self.layoutWidget_3.setGeometry(QRect(140, 260, 412, 42))
+        self.inputContainer_2 = QHBoxLayout(self.layoutWidget_3)
+        self.inputContainer_2.setObjectName(u"inputContainer_2")
+        self.inputContainer_2.setContentsMargins(0, 0, 0, 0)
+        self.listNameLabel_3 = QLabel(self.layoutWidget_3)
+        self.listNameLabel_3.setObjectName(u"listNameLabel_3")
+        self.listNameLabel_3.setFont(font2)
+
+        self.inputContainer_2.addWidget(self.listNameLabel_3)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.inputContainer_2.addItem(self.horizontalSpacer_4)
+
+        self.emailEdit = QLineEdit(self.layoutWidget_3)
+        self.emailEdit.setObjectName(u"emailEdit")
+        self.emailEdit.setMinimumSize(QSize(300, 40))
+        self.emailEdit.setMaximumSize(QSize(16777215, 16777215))
+        self.emailEdit.setSizeIncrement(QSize(0, 34))
+        self.emailEdit.setFont(font3)
+
+        self.inputContainer_2.addWidget(self.emailEdit)
+
+        self.layoutWidget_4 = QWidget(self.registerPage)
+        self.layoutWidget_4.setObjectName(u"layoutWidget_4")
+        self.layoutWidget_4.setGeometry(QRect(140, 342, 412, 42))
+        self.inputContainer_3 = QHBoxLayout(self.layoutWidget_4)
+        self.inputContainer_3.setObjectName(u"inputContainer_3")
+        self.inputContainer_3.setContentsMargins(0, 0, 0, 0)
+        self.listNameLabel_4 = QLabel(self.layoutWidget_4)
+        self.listNameLabel_4.setObjectName(u"listNameLabel_4")
+        self.listNameLabel_4.setFont(font2)
+
+        self.inputContainer_3.addWidget(self.listNameLabel_4)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.inputContainer_3.addItem(self.horizontalSpacer_5)
+
+        self.phoneEdit = QLineEdit(self.layoutWidget_4)
+        self.phoneEdit.setObjectName(u"phoneEdit")
+        self.phoneEdit.setMinimumSize(QSize(300, 40))
+        self.phoneEdit.setMaximumSize(QSize(16777215, 16777215))
+        self.phoneEdit.setSizeIncrement(QSize(0, 34))
+        self.phoneEdit.setFont(font3)
+
+        self.inputContainer_3.addWidget(self.phoneEdit)
+
+        self.registerButton = QPushButton(self.registerPage)
+        self.registerButton.setObjectName(u"registerButton")
+        self.registerButton.setEnabled(False)
+        self.registerButton.setGeometry(QRect(140, 420, 411, 45))
+        self.registerButton.setMinimumSize(QSize(0, 35))
+        self.registerButton.setMaximumSize(QSize(16777215, 45))
+        self.registerButton.setFont(font4)
+        self.nameMessageLabel = QLabel(self.registerPage)
+        self.nameMessageLabel.setObjectName(u"nameMessageLabel")
+        self.nameMessageLabel.setGeometry(QRect(250, 226, 431, 16))
+        self.emailMessageLabel = QLabel(self.registerPage)
+        self.emailMessageLabel.setObjectName(u"emailMessageLabel")
+        self.emailMessageLabel.setGeometry(QRect(252, 307, 421, 16))
+        self.phoneMessageLabel = QLabel(self.registerPage)
+        self.phoneMessageLabel.setObjectName(u"phoneMessageLabel")
+        self.phoneMessageLabel.setGeometry(QRect(252, 387, 391, 16))
+        self.registerMessageLabel = QLabel(self.registerPage)
+        self.registerMessageLabel.setObjectName(u"registerMessageLabel")
+        self.registerMessageLabel.setGeometry(QRect(140, 480, 411, 51))
+        font6 = QFont()
+        font6.setPointSize(11)
+        self.registerMessageLabel.setFont(font6)
+        self.registerMessageLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
+        self.stackedWidget.addWidget(self.registerPage)
         self.settingsPage = QWidget()
         self.settingsPage.setObjectName(u"settingsPage")
         self.label_4 = QLabel(self.settingsPage)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setGeometry(QRect(180, 220, 341, 71))
-        self.label_4.setFont(font5)
+        font7 = QFont()
+        font7.setPointSize(40)
+        self.label_4.setFont(font7)
         self.stackedWidget.addWidget(self.settingsPage)
 
         self.horizontalLayout.addWidget(self.stackedWidget)
@@ -332,7 +436,7 @@ class Ui_MainWindow(object):
         self.actionAbout.setText(QCoreApplication.translate("MainWindow", u"About", None))
         self.titleLabel.setText(QCoreApplication.translate("MainWindow", u"Places Finder", None))
         self.searchMenuButton.setText(QCoreApplication.translate("MainWindow", u"Search", None))
-        self.readButton.setText(QCoreApplication.translate("MainWindow", u"Read", None))
+        self.registerMenuButton.setText(QCoreApplication.translate("MainWindow", u"Register", None))
         self.settingsButton.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
         ___qtablewidgetitem = self.tableWidget.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Name", None));
@@ -351,7 +455,15 @@ class Ui_MainWindow(object):
         self.searchButton.setText(QCoreApplication.translate("MainWindow", u"Start searching", None))
         self.stopScrapingButton.setText(QCoreApplication.translate("MainWindow", u"Stop searching", None))
         self.saveListButton.setText("")
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Read Page", None))
+        self.registerHeaderLabel.setText(QCoreApplication.translate("MainWindow", u"Register Now", None))
+        self.listNameLabel_2.setText(QCoreApplication.translate("MainWindow", u"Name", None))
+        self.listNameLabel_3.setText(QCoreApplication.translate("MainWindow", u"Email", None))
+        self.listNameLabel_4.setText(QCoreApplication.translate("MainWindow", u"Phone", None))
+        self.registerButton.setText(QCoreApplication.translate("MainWindow", u"Register", None))
+        self.nameMessageLabel.setText(QCoreApplication.translate("MainWindow", u"Field is empty", None))
+        self.emailMessageLabel.setText(QCoreApplication.translate("MainWindow", u"Field is empty", None))
+        self.phoneMessageLabel.setText(QCoreApplication.translate("MainWindow", u"Field is empty", None))
+        self.registerMessageLabel.setText(QCoreApplication.translate("MainWindow", u"Fill all above fields then click register button", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Settings Page", None))
         self.menuLanguages.setTitle(QCoreApplication.translate("MainWindow", u"Languages", None))
         self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
