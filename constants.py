@@ -100,4 +100,4 @@ SNOV_API_KEYS_LIST = [
 FINDYMAIL_API_KEY_AHMED_GSM = "NaVzLp0SOcfe6GILO5fadGv0WTtAl88woNUcbHwh6bccf8dc"
 
 # Registration
-register_endpoint = "http://localhost/License%20manager/user/register_API.php"
+api_endpoint = "http://localhost/License_manager/user/API.php"

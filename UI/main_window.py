@@ -6,6 +6,7 @@ import threading
 import time
 
 from UI.dialog_about import dialog_about
+from UI.requestAPI import LicenseManagerClient
 from Ui_MainWindow import Ui_MainWindow
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
 from PySide6.QtCore import QTranslator, QLocale, QCoreApplication
@@ -232,28 +233,37 @@ class WindowApp(QMainWindow):
         name = self.ui.nameEdit.text()
         email = self.ui.emailEdit.text()
         phone = self.ui.phoneEdit.text()
-        register = Register(
-            name=name,
-            email=email,
-            phone=phone,
-            mac_address=self.get_mac_address(),
-        )
-        result = register.request_Api()
-        if result == True:
+        # Register the user
+        client = LicenseManagerClient(api_endpoint)
+
+        # Registration example
+        registration_data = {
+            "email": email,
+            "mac_address": self.get_mac_address(),
+            "name": name,
+            "phone": phone
+        }
+        result = client.register_device(registration_data)
+        print(result)
+        if result["status"] == "success":
             self.ui.registerMessageLabel.setText("Registration successful! You can now visit the \nSearch page to explore and find your preferred businesses.")
+        elif result["message"].startswith("Duplicate entry"):
+            self.ui.registerMessageLabel.setText("You have already subscribed with this email")
         else:
-            self.ui.registerMessageLabel.setText(result)
+            self.ui.registerMessageLabel.setText(f"Unknown error: {result['message']}")
 
         # Disable all the fields after registering
+        """
         self.ui.nameEdit.setEnabled(False)
         self.ui.emailEdit.setEnabled(False)
         self.ui.phoneEdit.setEnabled(False)
-        self.ui.searchPage.setEnabled(True)
+        self.ui.searchPage.setEnabled(True)"""
 
         # Add the registered user to the local
         # users table
-        sql_request ="""INSERT INTO googlemaps.localusers(name, email, phone) VALUES(%s, %s, %s)"""
-        values = (name, email, phone)
+        user_id_remote = result["data"]["user_id"]
+        sql_request ="""INSERT INTO googlemaps.localusers(user_id_remote, name, email, phone) VALUES(%s, %s, %s, %s)"""
+        values = (user_id_remote, name, email, phone)
         Model.insert_into_database(sql_request, values)
 
     def handle_register_form_states(self):
@@ -266,9 +276,8 @@ class WindowApp(QMainWindow):
             self.ui.registerPage.setEnabled(True)
             self.ui.searchPage.setEnabled(False)
         else:
-            self.ui.registerPage.setEnabled(False)
+            #self.ui.registerPage.setEnabled(False)
             self.ui.searchPage.setEnabled(True)
-
             self.ui.registerMessageLabel.setText("You have already registered")
 
     def update_table_widget(self):
