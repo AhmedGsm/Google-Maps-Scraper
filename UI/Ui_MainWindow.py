@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1103, 643)
+        MainWindow.resize(1103, 670)
         MainWindow.setStyleSheet(u"#centralwidget{\n"
 "background-color: white;\n"
 "}")
@@ -162,8 +162,9 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.mainContent = QWidget(self.searchPage)
         self.mainContent.setObjectName(u"mainContent")
-        self.mainContent.setStyleSheet(u"#userInfosFrame {\n"
+        self.mainContent.setStyleSheet(u"#userInfosFrame, #messagesLabel {\n"
 "	border: 1px solid #CACACA;\n"
+"\n"
 "}")
         self.tableWidget = QTableWidget(self.mainContent)
         if (self.tableWidget.columnCount() < 5):
@@ -179,17 +180,17 @@ class Ui_MainWindow(object):
         __qtablewidgetitem4 = QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(4, __qtablewidgetitem4)
         self.tableWidget.setObjectName(u"tableWidget")
-        self.tableWidget.setGeometry(QRect(1, 250, 781, 271))
+        self.tableWidget.setGeometry(QRect(1, 286, 531, 271))
         self.listLabel = QLabel(self.mainContent)
         self.listLabel.setObjectName(u"listLabel")
-        self.listLabel.setGeometry(QRect(3, 225, 140, 21))
+        self.listLabel.setGeometry(QRect(3, 261, 140, 21))
         font2 = QFont()
         font2.setFamilies([u"Yu Gothic UI Semibold"])
         font2.setPointSize(10)
         self.listLabel.setFont(font2)
         self.messagesLabel = QLabel(self.mainContent)
         self.messagesLabel.setObjectName(u"messagesLabel")
-        self.messagesLabel.setGeometry(QRect(520, 30, 271, 171))
+        self.messagesLabel.setGeometry(QRect(550, 286, 221, 241))
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -200,24 +201,25 @@ class Ui_MainWindow(object):
         self.messagesLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.layoutWidget = QWidget(self.mainContent)
         self.layoutWidget.setObjectName(u"layoutWidget")
-        self.layoutWidget.setGeometry(QRect(0, 51, 483, 135))
-        self.verticalLayout_3 = QVBoxLayout(self.layoutWidget)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.layoutWidget.setGeometry(QRect(0, 51, 483, 161))
+        self.searchFormLayout = QVBoxLayout(self.layoutWidget)
+        self.searchFormLayout.setObjectName(u"searchFormLayout")
+        self.searchFormLayout.setContentsMargins(0, 0, 0, 0)
+        self.topHorizontalLayout = QHBoxLayout()
+        self.topHorizontalLayout.setObjectName(u"topHorizontalLayout")
         self.listNameLabel = QLabel(self.layoutWidget)
         self.listNameLabel.setObjectName(u"listNameLabel")
         self.listNameLabel.setFont(font2)
 
-        self.horizontalLayout_3.addWidget(self.listNameLabel)
+        self.topHorizontalLayout.addWidget(self.listNameLabel)
 
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.horizontalLayout_3.addItem(self.horizontalSpacer)
+        self.topHorizontalLayout.addItem(self.horizontalSpacer)
 
         self.listNameEdit = QLineEdit(self.layoutWidget)
         self.listNameEdit.setObjectName(u"listNameEdit")
+        self.listNameEdit.setEnabled(False)
         self.listNameEdit.setMinimumSize(QSize(300, 40))
         self.listNameEdit.setMaximumSize(QSize(16777215, 16777215))
         self.listNameEdit.setSizeIncrement(QSize(0, 34))
@@ -225,36 +227,38 @@ class Ui_MainWindow(object):
         font3.setPointSize(9)
         self.listNameEdit.setFont(font3)
 
-        self.horizontalLayout_3.addWidget(self.listNameEdit)
+        self.topHorizontalLayout.addWidget(self.listNameEdit)
 
 
-        self.verticalLayout_3.addLayout(self.horizontalLayout_3)
+        self.searchFormLayout.addLayout(self.topHorizontalLayout)
 
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.bottomHorizontalLayout = QHBoxLayout()
+        self.bottomHorizontalLayout.setObjectName(u"bottomHorizontalLayout")
         self.label = QLabel(self.layoutWidget)
         self.label.setObjectName(u"label")
         self.label.setFont(font2)
 
-        self.horizontalLayout_4.addWidget(self.label)
+        self.bottomHorizontalLayout.addWidget(self.label)
 
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
+        self.bottomHorizontalLayout.addItem(self.horizontalSpacer_2)
 
         self.searchEdit = QLineEdit(self.layoutWidget)
         self.searchEdit.setObjectName(u"searchEdit")
+        self.searchEdit.setEnabled(False)
         self.searchEdit.setMinimumSize(QSize(300, 40))
         self.searchEdit.setMaximumSize(QSize(16777215, 16777215))
         self.searchEdit.setSizeIncrement(QSize(0, 34))
 
-        self.horizontalLayout_4.addWidget(self.searchEdit)
+        self.bottomHorizontalLayout.addWidget(self.searchEdit)
 
 
-        self.verticalLayout_3.addLayout(self.horizontalLayout_4)
+        self.searchFormLayout.addLayout(self.bottomHorizontalLayout)
 
         self.buttonsContainer = QHBoxLayout()
         self.buttonsContainer.setObjectName(u"buttonsContainer")
+        self.buttonsContainer.setContentsMargins(-1, -1, -1, 0)
         self.searchButton = QPushButton(self.layoutWidget)
         self.searchButton.setObjectName(u"searchButton")
         self.searchButton.setMinimumSize(QSize(0, 35))
@@ -274,12 +278,12 @@ class Ui_MainWindow(object):
         self.buttonsContainer.addWidget(self.stopScrapingButton)
 
 
-        self.verticalLayout_3.addLayout(self.buttonsContainer)
+        self.searchFormLayout.addLayout(self.buttonsContainer)
 
         self.saveListButton = QPushButton(self.mainContent)
         self.saveListButton.setObjectName(u"saveListButton")
         self.saveListButton.setEnabled(False)
-        self.saveListButton.setGeometry(QRect(0, 530, 40, 40))
+        self.saveListButton.setGeometry(QRect(0, 566, 40, 40))
         icon = QIcon()
         icon.addFile(u":/icons/C:/Users/ahmed/Downloads/feather icons/save.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.saveListButton.setIcon(icon)
@@ -345,10 +349,10 @@ class Ui_MainWindow(object):
 
         self.userInfosVLayout.addWidget(self.nameValue)
 
-        self.creditsValue_2 = QLabel(self.userInfosFrame)
-        self.creditsValue_2.setObjectName(u"creditsValue_2")
+        self.emailValue = QLabel(self.userInfosFrame)
+        self.emailValue.setObjectName(u"emailValue")
 
-        self.userInfosVLayout.addWidget(self.creditsValue_2)
+        self.userInfosVLayout.addWidget(self.emailValue)
 
         self.creditsValue = QLabel(self.userInfosFrame)
         self.creditsValue.setObjectName(u"creditsValue")
@@ -378,6 +382,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addLayout(self.userInfosLayout, 0, 0, 1, 1)
 
+        self.licenseStatusLabel = QLabel(self.mainContent)
+        self.licenseStatusLabel.setObjectName(u"licenseStatusLabel")
+        self.licenseStatusLabel.setGeometry(QRect(3, 225, 771, 18))
+        font6 = QFont()
+        font6.setPointSize(11)
+        font6.setBold(True)
+        self.licenseStatusLabel.setFont(font6)
+        self.licenseStatusLabel.setStyleSheet(u"color: #1AF3BA")
 
         self.gridLayout.addWidget(self.mainContent, 0, 0, 1, 1)
 
@@ -387,9 +399,9 @@ class Ui_MainWindow(object):
         self.registerHeaderLabel = QLabel(self.registerPage)
         self.registerHeaderLabel.setObjectName(u"registerHeaderLabel")
         self.registerHeaderLabel.setGeometry(QRect(270, 90, 158, 36))
-        font6 = QFont()
-        font6.setPointSize(20)
-        self.registerHeaderLabel.setFont(font6)
+        font7 = QFont()
+        font7.setPointSize(20)
+        self.registerHeaderLabel.setFont(font7)
         self.layoutWidget_2 = QWidget(self.registerPage)
         self.layoutWidget_2.setObjectName(u"layoutWidget_2")
         self.layoutWidget_2.setGeometry(QRect(141, 181, 411, 42))
@@ -484,9 +496,9 @@ class Ui_MainWindow(object):
         self.registerMessageLabel = QLabel(self.registerPage)
         self.registerMessageLabel.setObjectName(u"registerMessageLabel")
         self.registerMessageLabel.setGeometry(QRect(140, 480, 411, 51))
-        font7 = QFont()
-        font7.setPointSize(11)
-        self.registerMessageLabel.setFont(font7)
+        font8 = QFont()
+        font8.setPointSize(11)
+        self.registerMessageLabel.setFont(font8)
         self.registerMessageLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.stackedWidget.addWidget(self.registerPage)
         self.settingsPage = QWidget()
@@ -494,9 +506,9 @@ class Ui_MainWindow(object):
         self.label_4 = QLabel(self.settingsPage)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setGeometry(QRect(180, 220, 341, 71))
-        font8 = QFont()
-        font8.setPointSize(40)
-        self.label_4.setFont(font8)
+        font9 = QFont()
+        font9.setPointSize(40)
+        self.label_4.setFont(font9)
         self.stackedWidget.addWidget(self.settingsPage)
 
         self.horizontalLayout.addWidget(self.stackedWidget)
@@ -559,11 +571,12 @@ class Ui_MainWindow(object):
         self.dueLabel.setText(QCoreApplication.translate("MainWindow", u"License Due", None))
         self.statusLabel.setText(QCoreApplication.translate("MainWindow", u"License Status", None))
         self.nameValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
-        self.creditsValue_2.setText(QCoreApplication.translate("MainWindow", u"None", None))
+        self.emailValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
         self.creditsValue.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.licenseValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
         self.dueValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
         self.statusValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
+        self.licenseStatusLabel.setText(QCoreApplication.translate("MainWindow", u"License is valid!", None))
         self.registerHeaderLabel.setText(QCoreApplication.translate("MainWindow", u"Register Now", None))
         self.listNameLabel_2.setText(QCoreApplication.translate("MainWindow", u"Name", None))
         self.listNameLabel_3.setText(QCoreApplication.translate("MainWindow", u"Email", None))

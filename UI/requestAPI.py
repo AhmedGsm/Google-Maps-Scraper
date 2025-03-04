@@ -39,8 +39,8 @@ class LicenseManagerClient:
         )
         return self._handle_response(response)
 
-    def get_all_data(self, table_name):
-        params = {'action': 'get_data', 'table': table_name}
+    def get_data(self, query):
+        params = {'action': 'get_data', 'query': query}
         response = requests.get(
             self.base_url,
             headers=self.headers,
@@ -72,4 +72,26 @@ class LicenseManagerClient:
             json=payload
         )
         return self._handle_response(response)
+
+    def check_license(self, user_id):
+        """
+        Check the license status for a user.
+        """
+        payload = {
+            "action": "check_license",
+            "user_id": user_id
+        }
+        response = requests.post(
+            self.base_url,
+            headers=self.headers,
+            json=payload
+        )
+        return self._handle_response(response)
+"""
+client = LicenseManagerClient(api_endpoint)
+response = client.check_license(181)
+
+print(response)
+"""
+
 

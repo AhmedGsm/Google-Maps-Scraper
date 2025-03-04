@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1103</width>
-    <height>643</height>
+    <height>670</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -215,16 +215,17 @@ background-color: #EE96B0;
         <item row="0" column="0">
          <widget class="QWidget" name="mainContent" native="true">
           <property name="styleSheet">
-           <string notr="true">#userInfosFrame {
+           <string notr="true">#userInfosFrame, #messagesLabel {
 	border: 1px solid #CACACA;
+
 }</string>
           </property>
           <widget class="QTableWidget" name="tableWidget">
            <property name="geometry">
             <rect>
              <x>1</x>
-             <y>250</y>
-             <width>781</width>
+             <y>286</y>
+             <width>531</width>
              <height>271</height>
             </rect>
            </property>
@@ -258,7 +259,7 @@ background-color: #EE96B0;
            <property name="geometry">
             <rect>
              <x>3</x>
-             <y>225</y>
+             <y>261</y>
              <width>140</width>
              <height>21</height>
             </rect>
@@ -276,10 +277,10 @@ background-color: #EE96B0;
           <widget class="QLabel" name="messagesLabel">
            <property name="geometry">
             <rect>
-             <x>520</x>
-             <y>30</y>
-             <width>271</width>
-             <height>171</height>
+             <x>550</x>
+             <y>286</y>
+             <width>221</width>
+             <height>241</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -310,12 +311,12 @@ background-color: #EE96B0;
              <x>0</x>
              <y>51</y>
              <width>483</width>
-             <height>135</height>
+             <height>161</height>
             </rect>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <layout class="QVBoxLayout" name="searchFormLayout">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <layout class="QHBoxLayout" name="topHorizontalLayout">
               <item>
                <widget class="QLabel" name="listNameLabel">
                 <property name="font">
@@ -344,6 +345,9 @@ background-color: #EE96B0;
               </item>
               <item>
                <widget class="QLineEdit" name="listNameEdit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>300</width>
@@ -372,7 +376,7 @@ background-color: #EE96B0;
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <layout class="QHBoxLayout" name="bottomHorizontalLayout">
               <item>
                <widget class="QLabel" name="label">
                 <property name="font">
@@ -425,6 +429,9 @@ background-color: #EE96B0;
             </item>
             <item>
              <layout class="QHBoxLayout" name="buttonsContainer">
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
               <item>
                <widget class="QPushButton" name="searchButton">
                 <property name="minimumSize">
@@ -484,7 +491,7 @@ background-color: #EE96B0;
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>530</y>
+             <y>566</y>
              <width>40</width>
              <height>40</height>
             </rect>
@@ -616,7 +623,7 @@ background-color: #EE96B0;
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="creditsValue_2">
+                 <widget class="QLabel" name="emailValue">
                   <property name="text">
                    <string>None</string>
                   </property>
@@ -655,6 +662,28 @@ background-color: #EE96B0;
              </layout>
             </item>
            </layout>
+          </widget>
+          <widget class="QLabel" name="licenseStatusLabel">
+           <property name="geometry">
+            <rect>
+             <x>3</x>
+             <y>225</y>
+             <width>771</width>
+             <height>18</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #1AF3BA</string>
+           </property>
+           <property name="text">
+            <string>License is valid!</string>
+           </property>
           </widget>
          </widget>
         </item>

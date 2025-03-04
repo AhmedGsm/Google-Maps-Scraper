@@ -27,6 +27,14 @@ class WindowApp(QMainWindow):
         self.table_widget = self.ui.tableWidget
         if self.table_widget:
             self.table_widget.setRowCount(TABLE_WIDGET_SIZE)
+
+        # Declare attributes
+        self.listNameEditChanged = False
+        self.searchEditChanged = False
+        self.is_start_searching = False
+        self.is_name_valid = False
+        self.is_phone_valid = False
+        self.is_email_valid = False
         self.ui.searchButton.clicked.connect(self.on_searchButton_clicked)
         self.ui.stopScrapingButton.clicked.connect(self.on_stopScrapingButton_clicked)
         self.ui.searchEdit.textChanged.connect(self.on_searchEdit_changed)
@@ -53,15 +61,14 @@ class WindowApp(QMainWindow):
         self.ui.stopScrapingButton.setEnabled(False)
         # Insert a text inside a edit search
         #self.ui.searchEdit.setText("Plomberie à Reghaia")
+        search_text = "Plomberie à Bab Ezzouar"
+        self.ui.listNameEdit.setText(search_text)
+        self.ui.searchEdit.setText(search_text)
         self.stopButtonText = self.ui.stopScrapingButton.text()
         self.startButtonText = self.ui.searchButton.text()
-        self.listNameEditChanged = False
-        self.searchEditChanged = False
-        self.is_start_searching = False
-        self.is_name_valid = False
-        self.is_phone_valid = False
-        self.is_email_valid = False
+
         self.translate_UI()
+        self.check_license_update_user_infos()
         self.handle_register_form_states()
         # Declare variables
         self.data_buffer = [["Name", "Address", "Phone", "Website", "Maps"]]
@@ -74,6 +81,71 @@ class WindowApp(QMainWindow):
         #    app.installTranslator(self.translator)
         # Apply translations
         self.ui.retranslateUi(self)
+
+    def set_layout_enabled(self, layout, enabled):
+        """Disable or enable all widgets in the given layout."""
+        count = layout.count()
+        for i in range(count):
+            item = layout.itemAt(i)
+            if item.widget():
+                # If the item is a widget, enable/disable it
+                item.widget().setEnabled(enabled)
+            elif item.layout():
+                # If the item is a nested layout, recursively process it
+                self.set_layout_enabled(item.layout(), enabled)
+
+    def check_license_update_user_infos(self):
+        credits_count, email, expiration_date, license_status, license_type, name = self.get_remote_infos()
+        # Check License status
+        client = LicenseManagerClient(api_endpoint)
+        response = client.check_license(self.user_id_remote)
+        if response["status"] == "success":
+            print(response["message"])
+            self.ui.licenseStatusLabel.setText("License is valid")
+            # Enable the search fields of the form
+            self.ui.listNameEdit.setEnabled(True)
+            self.ui.searchEdit.setEnabled(True)
+            #self.set_layout_enabled(self.ui.searchFormLayout, True)
+        elif response["status"] == "error":
+            # Disable search form if the license is not activated or no credits available in the balance
+            self.set_layout_enabled(self.ui.searchFormLayout, False)
+            if response["error"] == "LICENSE_NOT_FOUND":
+                self.ui.licenseStatusLabel.setText("License is not found")
+            elif response["error"] == "LICENSE_EXPIRED":
+                self.ui.licenseStatusLabel.setText("License is expired")
+            elif response["error"] == "LICENSE_NOT_ACTIVE":
+                self.ui.licenseStatusLabel.setText("License is not activated")
+            elif response["error"] == "NO_CREDITS":
+                self.ui.licenseStatusLabel.setText("You have no sufficient credits, please purchase more credits to get more search queries!")
+        # Update user info dashboard
+        self.ui.nameValue.setText(name)
+        self.ui.emailValue.setText(email)
+        self.ui.creditsValue.setText(credits_count)
+        self.ui.dueValue.setText(expiration_date)
+        self.ui.statusValue.setText(license_status)
+        self.ui.licenseValue.setText(license_type)
+
+    def get_remote_infos(self):
+        # Read remote user ID from the local database
+        local_data = Model.read_from_database("SELECT user_id_remote,email FROM googlemaps.localusers")
+        self.user_id_remote = local_data[0][0]
+        email = local_data[0][1]
+        manager = LicenseManagerClient(api_endpoint)
+        data = manager.get_data(f"SELECT * FROM users WHERE user_id={self.user_id_remote} AND email='{email}'")
+        print(data)
+        # Get user infos
+        name = data["data"][0]["name"]
+        email = data["data"][0]["email"]
+        print(f"{name}, {email}")
+        # Get credits and license details
+        data = manager.get_data(
+            f"SELECT license_type,credits,expiration_date,status FROM licenses WHERE user_id={self.user_id_remote}")
+        license_type = data["data"][0]["license_type"].capitalize()
+        credits_count = data["data"][0]["credits"]
+        expiration_date = data["data"][0]["expiration_date"].split(" ")[0]
+        license_status = data["data"][0]["status"].capitalize()
+        print(f"{license_type}, {credits_count}, {expiration_date}, {license_status}")
+        return credits_count, email, expiration_date, license_status, license_type, name
 
     def on_searchButton_clicked(self):
         self.startScrapingThread = threading.Thread(target=self.startScraping)
@@ -143,8 +215,6 @@ class WindowApp(QMainWindow):
             self.ui.searchButton.setEnabled(True)
             # Set the project name
         PROJECT_CONFIG["name"] = self.ui.listNameEdit.text()
-        print("PROJECT_CONFIG[name]" + PROJECT_CONFIG["name"])
-
 
     def on_searchEdit_returnPressed(self):
         if self.ui.searchEdit.text():
