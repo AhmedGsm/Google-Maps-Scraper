@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1024, 599)
+        MainWindow.resize(1103, 643)
         MainWindow.setStyleSheet(u"#centralwidget{\n"
 "background-color: white;\n"
 "}")
@@ -157,11 +157,14 @@ class Ui_MainWindow(object):
 "}")
         self.searchPage = QWidget()
         self.searchPage.setObjectName(u"searchPage")
+        self.searchPage.setEnabled(False)
         self.gridLayout = QGridLayout(self.searchPage)
         self.gridLayout.setObjectName(u"gridLayout")
         self.mainContent = QWidget(self.searchPage)
         self.mainContent.setObjectName(u"mainContent")
-        self.mainContent.setStyleSheet(u"")
+        self.mainContent.setStyleSheet(u"#userInfosFrame {\n"
+"	border: 1px solid #CACACA;\n"
+"}")
         self.tableWidget = QTableWidget(self.mainContent)
         if (self.tableWidget.columnCount() < 5):
             self.tableWidget.setColumnCount(5)
@@ -176,7 +179,7 @@ class Ui_MainWindow(object):
         __qtablewidgetitem4 = QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(4, __qtablewidgetitem4)
         self.tableWidget.setObjectName(u"tableWidget")
-        self.tableWidget.setGeometry(QRect(1, 250, 621, 271))
+        self.tableWidget.setGeometry(QRect(1, 250, 781, 271))
         self.listLabel = QLabel(self.mainContent)
         self.listLabel.setObjectName(u"listLabel")
         self.listLabel.setGeometry(QRect(3, 225, 140, 21))
@@ -276,11 +279,105 @@ class Ui_MainWindow(object):
         self.saveListButton = QPushButton(self.mainContent)
         self.saveListButton.setObjectName(u"saveListButton")
         self.saveListButton.setEnabled(False)
-        self.saveListButton.setGeometry(QRect(630, 479, 40, 40))
+        self.saveListButton.setGeometry(QRect(0, 530, 40, 40))
         icon = QIcon()
         icon.addFile(u":/icons/C:/Users/ahmed/Downloads/feather icons/save.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.saveListButton.setIcon(icon)
         self.saveListButton.setIconSize(QSize(32, 32))
+        self.userInfosFrame = QFrame(self.mainContent)
+        self.userInfosFrame.setObjectName(u"userInfosFrame")
+        self.userInfosFrame.setGeometry(QRect(500, 50, 281, 161))
+        self.userInfosFrame.setStyleSheet(u"")
+        self.userInfosFrame.setFrameShape(QFrame.StyledPanel)
+        self.userInfosFrame.setFrameShadow(QFrame.Raised)
+        self.gridLayout_2 = QGridLayout(self.userInfosFrame)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.userInfosLayout = QHBoxLayout()
+        self.userInfosLayout.setObjectName(u"userInfosLayout")
+        self.labelsVLayout = QVBoxLayout()
+        self.labelsVLayout.setObjectName(u"labelsVLayout")
+        self.nameLabel = QLabel(self.userInfosFrame)
+        self.nameLabel.setObjectName(u"nameLabel")
+        font5 = QFont()
+        font5.setPointSize(9)
+        font5.setBold(True)
+        self.nameLabel.setFont(font5)
+
+        self.labelsVLayout.addWidget(self.nameLabel)
+
+        self.nameLabel_2 = QLabel(self.userInfosFrame)
+        self.nameLabel_2.setObjectName(u"nameLabel_2")
+        self.nameLabel_2.setFont(font5)
+
+        self.labelsVLayout.addWidget(self.nameLabel_2)
+
+        self.creditsLabel = QLabel(self.userInfosFrame)
+        self.creditsLabel.setObjectName(u"creditsLabel")
+        self.creditsLabel.setFont(font5)
+
+        self.labelsVLayout.addWidget(self.creditsLabel)
+
+        self.licenseLabel = QLabel(self.userInfosFrame)
+        self.licenseLabel.setObjectName(u"licenseLabel")
+        self.licenseLabel.setFont(font5)
+
+        self.labelsVLayout.addWidget(self.licenseLabel)
+
+        self.dueLabel = QLabel(self.userInfosFrame)
+        self.dueLabel.setObjectName(u"dueLabel")
+        self.dueLabel.setFont(font5)
+
+        self.labelsVLayout.addWidget(self.dueLabel)
+
+        self.statusLabel = QLabel(self.userInfosFrame)
+        self.statusLabel.setObjectName(u"statusLabel")
+        self.statusLabel.setFont(font5)
+
+        self.labelsVLayout.addWidget(self.statusLabel)
+
+
+        self.userInfosLayout.addLayout(self.labelsVLayout)
+
+        self.userInfosVLayout = QVBoxLayout()
+        self.userInfosVLayout.setObjectName(u"userInfosVLayout")
+        self.nameValue = QLabel(self.userInfosFrame)
+        self.nameValue.setObjectName(u"nameValue")
+
+        self.userInfosVLayout.addWidget(self.nameValue)
+
+        self.creditsValue_2 = QLabel(self.userInfosFrame)
+        self.creditsValue_2.setObjectName(u"creditsValue_2")
+
+        self.userInfosVLayout.addWidget(self.creditsValue_2)
+
+        self.creditsValue = QLabel(self.userInfosFrame)
+        self.creditsValue.setObjectName(u"creditsValue")
+
+        self.userInfosVLayout.addWidget(self.creditsValue)
+
+        self.licenseValue = QLabel(self.userInfosFrame)
+        self.licenseValue.setObjectName(u"licenseValue")
+
+        self.userInfosVLayout.addWidget(self.licenseValue)
+
+        self.dueValue = QLabel(self.userInfosFrame)
+        self.dueValue.setObjectName(u"dueValue")
+
+        self.userInfosVLayout.addWidget(self.dueValue)
+
+        self.statusValue = QLabel(self.userInfosFrame)
+        self.statusValue.setObjectName(u"statusValue")
+
+        self.userInfosVLayout.addWidget(self.statusValue)
+
+
+        self.userInfosLayout.addLayout(self.userInfosVLayout)
+
+        self.userInfosLayout.setStretch(0, 1)
+        self.userInfosLayout.setStretch(1, 3)
+
+        self.gridLayout_2.addLayout(self.userInfosLayout, 0, 0, 1, 1)
+
 
         self.gridLayout.addWidget(self.mainContent, 0, 0, 1, 1)
 
@@ -289,10 +386,10 @@ class Ui_MainWindow(object):
         self.registerPage.setObjectName(u"registerPage")
         self.registerHeaderLabel = QLabel(self.registerPage)
         self.registerHeaderLabel.setObjectName(u"registerHeaderLabel")
-        self.registerHeaderLabel.setGeometry(QRect(140, 90, 441, 36))
-        font5 = QFont()
-        font5.setPointSize(20)
-        self.registerHeaderLabel.setFont(font5)
+        self.registerHeaderLabel.setGeometry(QRect(270, 90, 158, 36))
+        font6 = QFont()
+        font6.setPointSize(20)
+        self.registerHeaderLabel.setFont(font6)
         self.layoutWidget_2 = QWidget(self.registerPage)
         self.layoutWidget_2.setObjectName(u"layoutWidget_2")
         self.layoutWidget_2.setGeometry(QRect(141, 181, 411, 42))
@@ -387,9 +484,9 @@ class Ui_MainWindow(object):
         self.registerMessageLabel = QLabel(self.registerPage)
         self.registerMessageLabel.setObjectName(u"registerMessageLabel")
         self.registerMessageLabel.setGeometry(QRect(140, 480, 411, 51))
-        font6 = QFont()
-        font6.setPointSize(11)
-        self.registerMessageLabel.setFont(font6)
+        font7 = QFont()
+        font7.setPointSize(11)
+        self.registerMessageLabel.setFont(font7)
         self.registerMessageLabel.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignTop)
         self.stackedWidget.addWidget(self.registerPage)
         self.settingsPage = QWidget()
@@ -397,9 +494,9 @@ class Ui_MainWindow(object):
         self.label_4 = QLabel(self.settingsPage)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setGeometry(QRect(180, 220, 341, 71))
-        font7 = QFont()
-        font7.setPointSize(40)
-        self.label_4.setFont(font7)
+        font8 = QFont()
+        font8.setPointSize(40)
+        self.label_4.setFont(font8)
         self.stackedWidget.addWidget(self.settingsPage)
 
         self.horizontalLayout.addWidget(self.stackedWidget)
@@ -409,7 +506,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1024, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1103, 22))
         self.menuLanguages = QMenu(self.menubar)
         self.menuLanguages.setObjectName(u"menuLanguages")
         self.menuHelp = QMenu(self.menubar)
@@ -455,14 +552,26 @@ class Ui_MainWindow(object):
         self.searchButton.setText(QCoreApplication.translate("MainWindow", u"Start searching", None))
         self.stopScrapingButton.setText(QCoreApplication.translate("MainWindow", u"Stop searching", None))
         self.saveListButton.setText("")
+        self.nameLabel.setText(QCoreApplication.translate("MainWindow", u"Name", None))
+        self.nameLabel_2.setText(QCoreApplication.translate("MainWindow", u"Email", None))
+        self.creditsLabel.setText(QCoreApplication.translate("MainWindow", u"Credits", None))
+        self.licenseLabel.setText(QCoreApplication.translate("MainWindow", u"License", None))
+        self.dueLabel.setText(QCoreApplication.translate("MainWindow", u"License Due", None))
+        self.statusLabel.setText(QCoreApplication.translate("MainWindow", u"License Status", None))
+        self.nameValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
+        self.creditsValue_2.setText(QCoreApplication.translate("MainWindow", u"None", None))
+        self.creditsValue.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.licenseValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
+        self.dueValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
+        self.statusValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
         self.registerHeaderLabel.setText(QCoreApplication.translate("MainWindow", u"Register Now", None))
         self.listNameLabel_2.setText(QCoreApplication.translate("MainWindow", u"Name", None))
         self.listNameLabel_3.setText(QCoreApplication.translate("MainWindow", u"Email", None))
         self.listNameLabel_4.setText(QCoreApplication.translate("MainWindow", u"Phone", None))
         self.registerButton.setText(QCoreApplication.translate("MainWindow", u"Register", None))
-        self.nameMessageLabel.setText(QCoreApplication.translate("MainWindow", u"Field is empty", None))
-        self.emailMessageLabel.setText(QCoreApplication.translate("MainWindow", u"Field is empty", None))
-        self.phoneMessageLabel.setText(QCoreApplication.translate("MainWindow", u"Field is empty", None))
+        self.nameMessageLabel.setText(QCoreApplication.translate("MainWindow", u"This field is required", None))
+        self.emailMessageLabel.setText(QCoreApplication.translate("MainWindow", u"This field is required", None))
+        self.phoneMessageLabel.setText(QCoreApplication.translate("MainWindow", u"This field is required", None))
         self.registerMessageLabel.setText(QCoreApplication.translate("MainWindow", u"Fill all above fields then click register button", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Settings Page", None))
         self.menuLanguages.setTitle(QCoreApplication.translate("MainWindow", u"Languages", None))
