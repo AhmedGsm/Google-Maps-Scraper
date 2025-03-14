@@ -68,7 +68,7 @@ class WindowApp(QMainWindow):
         self.startButtonText = self.ui.searchButton.text()
 
         self.translate_UI()
-        self.check_license_update_user_infos()
+        #self.check_license_update_user_infos()
         self.handle_register_form_states()
         # Declare variables
         self.data_buffer = [["Name", "Address", "Phone", "Website", "Maps"]]
@@ -98,7 +98,7 @@ class WindowApp(QMainWindow):
         credits_count, email, expiration_date, license_status, license_type, name = self.get_remote_infos()
         # Check License status
         client = LicenseManagerClient(api_endpoint)
-        response = client.check_license(self.user_id_remote)
+        response = client.check_license(self.user_id_remote,self.get_mac_address())
         if response["status"] == "success":
             print(response["message"])
             self.ui.licenseStatusLabel.setText("License is valid")
@@ -109,20 +109,22 @@ class WindowApp(QMainWindow):
         elif response["status"] == "error":
             # Disable search form if the license is not activated or no credits available in the balance
             self.set_layout_enabled(self.ui.searchFormLayout, False)
-            if response["error"] == "LICENSE_NOT_FOUND":
+            error = response["error"]
+            if error == "LICENSE_NOT_FOUND":
                 self.ui.licenseStatusLabel.setText("License is not found")
-            elif response["error"] == "LICENSE_EXPIRED":
+            elif error == "LICENSE_EXPIRED":
                 self.ui.licenseStatusLabel.setText("License is expired")
-            elif response["error"] == "LICENSE_NOT_ACTIVE":
+            elif error == "LICENSE_NOT_ACTIVE":
                 self.ui.licenseStatusLabel.setText("License is not activated")
-            elif response["error"] == "NO_CREDITS":
+            elif error == "DUPLICATE_USAGE":
+                self.ui.licenseStatusLabel.setText("This license is not running on this device")
+            elif error == "NO_CREDITS":
                 self.ui.licenseStatusLabel.setText("You have no sufficient credits, please purchase more credits to get more search queries!")
         # Update user info dashboard
         self.ui.nameValue.setText(name)
         self.ui.emailValue.setText(email)
         self.ui.creditsValue.setText(credits_count)
         self.ui.dueValue.setText(expiration_date)
-        self.ui.statusValue.setText(license_status)
         self.ui.licenseValue.setText(license_type)
 
     def get_remote_infos(self):
@@ -174,10 +176,11 @@ class WindowApp(QMainWindow):
         self.ui.searchEdit.setEnabled(False)
         self.ui.listNameEdit.setEnabled(False)
         # Update decreasing credits
-        self.update_decreasing_credits()
-        self.check_license_update_user_infos()
+        if saas_manager:
+            self.update_decreasing_credits()
+            self.check_license_update_user_infos()
         # TEMPORARY Return statement!
-        return 0
+        #return 0
         self.driver_manipulator = DriverManipulator()
         self.googlemapssite = Site(self.driver_manipulator, self)
         self.googlemapssite.scrape_site(self.ui.searchEdit.text())

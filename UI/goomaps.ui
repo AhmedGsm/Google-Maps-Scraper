@@ -598,19 +598,6 @@ background-color: #EE96B0;
                   </property>
                  </widget>
                 </item>
-                <item>
-                 <widget class="QLabel" name="statusLabel">
-                  <property name="font">
-                   <font>
-                    <pointsize>9</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>License Status</string>
-                  </property>
-                 </widget>
-                </item>
                </layout>
               </item>
               <item>
@@ -650,13 +637,6 @@ background-color: #EE96B0;
                   </property>
                  </widget>
                 </item>
-                <item>
-                 <widget class="QLabel" name="statusValue">
-                  <property name="text">
-                   <string>None</string>
-                  </property>
-                 </widget>
-                </item>
                </layout>
               </item>
              </layout>
@@ -682,7 +662,7 @@ background-color: #EE96B0;
             <string notr="true">color: #1AF3BA</string>
            </property>
            <property name="text">
-            <string>License is valid!</string>
+            <string>Go to Register page to register</string>
            </property>
           </widget>
          </widget>

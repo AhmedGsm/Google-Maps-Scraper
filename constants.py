@@ -53,7 +53,7 @@ PHONE_NUMBER_PATTERN = r"^\+?([0-9]{1,4}[\s-]?)+$"
 # Database constants
 MYSQL_HOST = "localhost"
 MYSQL_USER = "root"
-MYSQL_PASSWORD = "0901"
+MYSQL_PASSWORD = ""
 MYSQL_DATABASE = "googlemaps"
 
 # Find email from emails finders(hunter.io)
@@ -100,4 +100,7 @@ SNOV_API_KEYS_LIST = [
 FINDYMAIL_API_KEY_AHMED_GSM = "NaVzLp0SOcfe6GILO5fadGv0WTtAl88woNUcbHwh6bccf8dc"
 
 # Registration
-api_endpoint = "http://localhost/License_manager/user/API.php"
+api_endpoint = "http://localhost/License_manager/api.php"
+
+# Saas management
+saas_manager =False

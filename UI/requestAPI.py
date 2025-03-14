@@ -74,13 +74,14 @@ class LicenseManagerClient:
         )
         return self._handle_response(response)
 
-    def check_license(self, user_id):
+    def check_license(self, user_id, actual_mac):
         """
         Check the license status for a user.
         """
         payload = {
             "action": "check_license",
-            "user_id": user_id
+            "user_id": user_id,
+            "device_identifier": actual_mac
         }
         response = requests.post(
             self.base_url,

@@ -246,7 +246,6 @@ class Ui_MainWindow(object):
 
         self.searchEdit = QLineEdit(self.layoutWidget)
         self.searchEdit.setObjectName(u"searchEdit")
-        self.searchEdit.setEnabled(False)
         self.searchEdit.setMinimumSize(QSize(300, 40))
         self.searchEdit.setMaximumSize(QSize(16777215, 16777215))
         self.searchEdit.setSizeIncrement(QSize(0, 34))
@@ -333,12 +332,6 @@ class Ui_MainWindow(object):
 
         self.labelsVLayout.addWidget(self.dueLabel)
 
-        self.statusLabel = QLabel(self.userInfosFrame)
-        self.statusLabel.setObjectName(u"statusLabel")
-        self.statusLabel.setFont(font5)
-
-        self.labelsVLayout.addWidget(self.statusLabel)
-
 
         self.userInfosLayout.addLayout(self.labelsVLayout)
 
@@ -368,11 +361,6 @@ class Ui_MainWindow(object):
         self.dueValue.setObjectName(u"dueValue")
 
         self.userInfosVLayout.addWidget(self.dueValue)
-
-        self.statusValue = QLabel(self.userInfosFrame)
-        self.statusValue.setObjectName(u"statusValue")
-
-        self.userInfosVLayout.addWidget(self.statusValue)
 
 
         self.userInfosLayout.addLayout(self.userInfosVLayout)
@@ -569,14 +557,12 @@ class Ui_MainWindow(object):
         self.creditsLabel.setText(QCoreApplication.translate("MainWindow", u"Credits", None))
         self.licenseLabel.setText(QCoreApplication.translate("MainWindow", u"License", None))
         self.dueLabel.setText(QCoreApplication.translate("MainWindow", u"License Due", None))
-        self.statusLabel.setText(QCoreApplication.translate("MainWindow", u"License Status", None))
         self.nameValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
         self.emailValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
         self.creditsValue.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.licenseValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
         self.dueValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
-        self.statusValue.setText(QCoreApplication.translate("MainWindow", u"None", None))
-        self.licenseStatusLabel.setText(QCoreApplication.translate("MainWindow", u"License is valid!", None))
+        self.licenseStatusLabel.setText(QCoreApplication.translate("MainWindow", u"Go to Register page to register", None))
         self.registerHeaderLabel.setText(QCoreApplication.translate("MainWindow", u"Register Now", None))
         self.listNameLabel_2.setText(QCoreApplication.translate("MainWindow", u"Name", None))
         self.listNameLabel_3.setText(QCoreApplication.translate("MainWindow", u"Email", None))
