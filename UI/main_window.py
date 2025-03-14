@@ -173,6 +173,11 @@ class WindowApp(QMainWindow):
         self.ui.saveListButton.setEnabled(False)
         self.ui.searchEdit.setEnabled(False)
         self.ui.listNameEdit.setEnabled(False)
+        # Update decreasing credits
+        self.update_decreasing_credits()
+        self.check_license_update_user_infos()
+        # TEMPORARY Return statement!
+        return 0
         self.driver_manipulator = DriverManipulator()
         self.googlemapssite = Site(self.driver_manipulator, self)
         self.googlemapssite.scrape_site(self.ui.searchEdit.text())
@@ -190,6 +195,10 @@ class WindowApp(QMainWindow):
         self.ui.listNameEdit.setEnabled(True)
         self.is_start_searching = False
         self.__total_places = 0
+
+    def update_decreasing_credits(self):
+        client = LicenseManagerClient(api_endpoint)
+        client.update_user(self.user_id_remote, "licenses", {"credits": "decrement"})
 
     def stopScraping(self):
         self.googlemapssite.stop_scraping()

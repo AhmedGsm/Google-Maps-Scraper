@@ -48,10 +48,11 @@ class LicenseManagerClient:
         )
         return self._handle_response(response)
 
-    def update_user(self, user_id, update_fields):
+    def update_user(self, user_id, table, update_fields):
         payload = {
             "action": "update_user",
             "user_id": user_id,
+            "table": table,
             "update_fields": update_fields
         }
         response = requests.put(
