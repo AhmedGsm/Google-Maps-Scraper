@@ -214,13 +214,13 @@ We welcome improvements! Please follow these steps:
 ---
 
 ## 📄 License
-Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
+Distributed under the **GPLv3 License**. See [`LICENSE`](LICENSE) for details.
 
 ---
 
 > 📬 **Support & Feedback**  
 > Found a bug? Need custom API integrations or CRM sync?  
-> → [Open an Issue](https://github.com/yourusername/places-finder/issues)  
+> → [Open an Issue](https://github.com/ahmedgsm/places-finder/issues)  
 > → Or reach out via email for enterprise licensing & support.
 
 *Built for sales automation. Designed for precision. Powered by open-source tech.* 🌟
